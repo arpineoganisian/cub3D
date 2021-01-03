@@ -33,7 +33,6 @@ int main(int argc, char **argv)
     read(fd, str2, all);
     str2[all] = '\0';
     splited = ft_split(str2, '\n');
-    
 //    int i = 0;
 //    while (splited[i])
 //        printf("%s\n", splited[i++]);
