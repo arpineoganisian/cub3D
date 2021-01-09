@@ -18,5 +18,36 @@
 # include <fcntl.h> // open
 # include <unistd.h> // read, close
 
+#include <stdio.h> // УДАЛИТЬ
+
+typedef struct  struct_mnlbx
+{
+    void    *mlx;
+    void    *mlx_win;
+}               sMnlbx;
+
+typedef struct  struct_resolution
+{
+    int rx;
+    int ry;
+}               sResolution;
+
+//структура для 2д карты
+typedef struct  struct_map
+{
+    int x;
+    int y;
+}               sMap;
+
+typedef struct  s_struct
+{
+    sMnlbx      mnlbx;
+    sResolution resol;
+    sMap        map;
+
+}               structure;
+
+int main(int argc, char **argv);
+void print_map(char **s, int j, structure *h);
 
 #endif
