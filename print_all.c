@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/16 13:05:57 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/18 17:44:45 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/18 18:03:04 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,23 @@ void	print_ray(t_struct *h)
 	t_player ray;
 
 	ray = h->player;
-	ray.px = h->player.px;
-	ray.py = h->player.py;
-	printf("%f\n", h->player.px);
-	while (h->s[(int)(ray.py + h->start_map)][(int)(ray.px)] != '1')
+	ray.start = ray.dir - (M_PI / 6); 
+	ray.end = ray.dir + (M_PI / 6);
+	
+	while (ray.start <= ray.end)
 	{
-		ray.px += cos(ray.dir) / SCALE;
-		ray.py -= sin(ray.dir) / SCALE;
-		my_pixel_put(h, (ray.px * SCALE), (ray.py * SCALE), 0x55F294);
+		ray.px = h->player.px;
+		ray.py = h->player.py;
+		while (h->s[(int)(ray.py + h->start_map)][(int)(ray.px)] != '1')
+		{
+			ray.px += cos(ray.start) / SCALE;
+			ray.py -= sin(ray.start) / SCALE;
+			my_pixel_put(h, (ray.px * SCALE), (ray.py * SCALE), 0x55F294);
+		}
+		ray.start += (M_PI / 6) / h->resol.rx;
 	}
 }
+
 
 void	print_all(t_struct *h)
 {

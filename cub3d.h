@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/17 16:27:54 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/18 17:50:05 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct	s_player
 	float	px;
 	float	py;
 	float	dir;
+	float	start;
+	float	end;
 }				t_player;
 
 typedef struct	s_data
