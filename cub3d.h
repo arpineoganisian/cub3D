@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/18 17:50:05 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:42:28 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # include <stdio.h> // УДАЛИТЬ
 
-#define SCALE 20
+#define SCALE 15
 
 typedef struct 	s_mnlbx
 {
@@ -61,6 +61,12 @@ typedef struct	s_data
 	int		endian; //порядок байтов
 }				t_data;
 
+typedef struct	s_color
+{
+	int	ceiling_color;
+	int	floor_color;
+}				t_color;
+
 typedef struct	s_struct
 {
 	char			**s;
@@ -70,6 +76,7 @@ typedef struct	s_struct
 	t_map			map;
 	t_player		player;
 	t_data			data;
+	t_color			color;
 }					t_struct;
 
 int		main(int argc, char **argv);

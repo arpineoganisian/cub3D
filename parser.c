@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/18 17:44:59 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:28:22 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,45 @@ void parse_player(t_struct *h)
 	}
 }
 
+
+int		create_trgb(int r, int g, int b)
+{
+	return(r << 16 | g << 8 | b);
+}
+
+int parse_colors(t_struct *h, char *s, char c)
+{
+	int	i;
+	int	r;
+	int	g;
+	int	b;
+
+	i = 2;
+	while (s[i] == ' ')
+		i++;
+	if(s[i] >= '0' && s[i] <= '9')
+		r = ft_atoi(s + i);
+	while (s[i] >= '0' && s[i] <= '9')
+		i++;
+	if(s[i] == ',')
+		i++;
+	if (s[i] >= '0' && s[i] <= '9')
+		g = ft_atoi(s + i);
+	while (s[i] >= '0' && s[i] <= '9')
+		i++;
+	if(s[i] == ',')
+		i++;
+	if (s[i] >= '0' && s[i] <= '9')
+		b = ft_atoi(s + i);
+	while (s[i] >= '0' && s[i] <= '9')
+		i++;
+	c == 'F' ? (h->color.floor_color = create_trgb(r, g, b)) :
+		(h->color.ceiling_color = create_trgb(r, g, b));
+	if(s[i] == '\0')
+		return (0);
+	return (-1);
+}
+
 void parse(t_struct *h)
 {
 	int j;
@@ -80,8 +119,12 @@ void parse(t_struct *h)
         //        if (h->s[j][0] == 'W' && h->s[j][1] == 'E' && h->s[j][2] == ' ')
         //        if (h->s[j][0] == 'E' && h->s[j][1] == 'A' && h->s[j][2] == ' ')
         //        if (h->s[j][0] == 'S' && h->s[j][1] == ' ')
-        //        if (h->s[j][0] == 'F' && h->s[j][1] == ' ')
-        //        if (h->s[j][0] == 'C' && h->s[j][1] == ' ')
+        if (h->s[j][0] == 'F' && h->s[j][1] == ' ')
+			if (parse_colors(h, h->s[j], h->s[j][0]))
+				return ;
+        if (h->s[j][0] == 'C' && h->s[j][1] == ' ')
+			if (parse_colors(h, h->s[j], h->s[j][0]))
+				return ;
 		if (h->s[j][0] == ' ' || h->s[j][0] == '0' || h->s[j][0] == '1')
         {
 			h->start_map = j;

@@ -60,6 +60,5 @@ int move(int keycode, t_struct *h)
 
 int x_close()
 {
-	//mlx_destroy_window(h->mnlbx.mlx, h->mnlbx.mlx_win);
 	exit(0);
 }
