@@ -6,13 +6,13 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 20:55:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/16 13:09:06 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/20 18:50:48 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	my_pixel_put(t_struct *h, int x, int y, int color)
+void	my_pixel_put(t_head *h, int x, int y, int color)
 {
 	char	*dst;
 

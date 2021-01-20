@@ -12,16 +12,16 @@
 
 #include "cub3d.h"
 
-void ft_clean_window(t_struct *h)
+void ft_clean_window(t_head *h)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while(i < h->resol.ry)
+	while(i < h->resol.y)
 	{
 		j = 0;
-		while (j < h->resol.rx)
+		while (j < h->resol.x)
 		{
 			my_pixel_put(h, j, i, 0x000000);
 			j++;
@@ -30,30 +30,30 @@ void ft_clean_window(t_struct *h)
 	}
 }
 
-int move(int keycode, t_struct *h)
+int move(int keycode, t_head *h)
  {
 	//printf("%d\n", keycode);
 	ft_clean_window(h);
 	if (keycode == 13)
-		h->player.py -= 1;
+		h->player.y -= 1;
 	if (keycode == 1)
-		h->player.py += 1;
+		h->player.y += 1;
 	if (keycode == 0)
-		h->player.px -= 1;
+		h->player.x -= 1;
 	if (keycode == 2)
-		h->player.px += 1;
-	if (keycode == 123)
-		h->player.dir += 0.05;
-	if (keycode == 124)
-		h->player.dir -= 0.05;
+		h->player.x += 1;
+	//if (keycode == 123)
+	//	h->player.dir += 0.05;
+	//if (keycode == 124)
+	//	h->player.dir -= 0.05;
 	if (keycode == 53)
 	{
 		mlx_destroy_window(h->mnlbx.mlx, h->mnlbx.mlx_win);
 		exit(0);
 	}
-	print_map(h);
-	print_square(h, h->player.px, h->player.py, 0xFFFFFF);
-	print_ray(h);
+	//print_map(h);
+	//print_square(h, h->player.x, h->player.y, 0xFFFFFF);
+	//print_ray(h);
 	mlx_put_image_to_window(h->mnlbx.mlx, h->mnlbx.mlx_win, h->data.img, 0, 0);
 	return (0);
 }
