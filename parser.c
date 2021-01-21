@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/20 23:48:41 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/21 15:59:30 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void parse(t_head *h)
 		if (h->map[j][0] == ' ' || h->map[j][0] == '0' || h->map[j][0] == '1')
         {
 			h->start_map = j;
-            print_all(h);
+            render_all(h);
         }
         j++;
     }

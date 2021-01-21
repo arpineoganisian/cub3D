@@ -32,7 +32,7 @@ void ft_clean_window(t_head *h)
 
 int move(int keycode, t_head *h)
  {
-	//printf("%d\n", keycode);
+	printf("%d\n", keycode);
 	ft_clean_window(h);
 	if (keycode == 13)
 		h->player.y -= 1;
@@ -46,7 +46,7 @@ int move(int keycode, t_head *h)
 	//	h->player.dir += 0.05;
 	//if (keycode == 124)
 	//	h->player.dir -= 0.05;
-	if (keycode == 53)
+	if (keycode == ESC)
 	{
 		mlx_destroy_window(h->mnlbx.mlx, h->mnlbx.mlx_win);
 		exit(0);

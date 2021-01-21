@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/21 01:08:24 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/21 18:17:06 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@
 # include <stdio.h> // УДАЛИТЬ
 
 #define SCALE 15
+
+#define ESC 53
+#define W 13
+#define A 0
+#define D 2
+#define S 1
+#define LEFT 123
+#define RIGHT 124
+
+
+
 
 typedef struct 	s_mnlbx
 {
@@ -79,6 +90,16 @@ typedef struct	s_ray
 
 	double	delta_x; //дельта 
 	double	delta_y;
+
+	int		map_x; //в какой клеточке находится луч
+	int		map_y;
+
+	int		step_x;
+	int		step_y;
+
+	int		hello_wall;
+
+	double	perpendicular;
 
 }				t_ray;
 
