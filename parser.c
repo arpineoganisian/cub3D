@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/21 15:59:30 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/23 20:29:16 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,35 @@ void parse_player(t_head *h)
 		{
 			if (h->map[j][i] == 'N' || h->map[j][i] == 'S' || h->map[j][i] == 'W' || h->map[j][i] == 'E')
 			{
-				h->player.x = i;
-				h->player.y = j - h->start_map;
+				h->player.x = i + 0.5;
+				h->player.y = j + 0.5;
 				if (h->map[j][i] == 'N')
-				{
-					h->player.dir_x = 1;
-					h->player.dir_y = 0;
-				}
-				if (h->map[j][i] == 'E')
-				{
-					h->player.dir_x = 0;
-					h->player.dir_y = 1;
-				}
-				if (h->map[j][i] == 'S')
-				{
-					h->player.dir_x = -1;
-					h->player.dir_y = 0;
-				}
-				if (h->map[j][i] == 'W')
 				{
 					h->player.dir_x = 0;
 					h->player.dir_y = -1;
+					h->ray.plane_x = 0.66; //FOV
+					h->ray.plane_y = 0; //FOV
+				}
+				if (h->map[j][i] == 'E')
+				{
+					h->player.dir_x = 1;
+					h->player.dir_y = 0;
+					h->ray.plane_x = 0; //FOV
+					h->ray.plane_y = 0.66; //FOV
+				}
+				if (h->map[j][i] == 'S')
+				{
+					h->player.dir_x = 0;
+					h->player.dir_y = 1;
+					h->ray.plane_x = -0.66; //FOV
+					h->ray.plane_y = 0; //FOV
+				}
+				if (h->map[j][i] == 'W')
+				{
+					h->player.dir_x = -1;
+					h->player.dir_y = 0;
+					h->ray.plane_x = 0; //FOV
+					h->ray.plane_y = -0.66; //FOV
 				}
 			}
 			i++;

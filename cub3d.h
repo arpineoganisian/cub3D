@@ -6,14 +6,14 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/21 18:17:06 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/22 17:20:35 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 # include "libft/libft.h"
-# include <mlx.h>
+# include "mlx/mlx.h"
 # include <math.h>
 # include <fcntl.h> // open
 # include <unistd.h> // read, close
@@ -30,6 +30,8 @@
 #define S 1
 #define LEFT 123
 #define RIGHT 124
+#define WALL_COLOR 0xF3D9D7
+
 
 
 
@@ -73,14 +75,17 @@ typedef struct	s_player
 	double	x;
 	double	y;
 	double	dir_x; //направление игрока, т.е. в какую сторону он будет смещаться по х и у
-	double	dir_y; //направление игрока, т.е. в какую сторону он будет смещаться по х и у
+	double	dir_y; 
+	double	old_dir_x; // для вращения
+	double	rot; //rotation
 }				t_player;
 
 typedef struct	s_ray
 {
-	double	cam_x;
+	double	cam_y;
 	double	plane_x; //плоскость камеры игрока, перпендекулярная dir
-	double	plane_y; 
+	double	plane_y;
+	double	old_plane_x; // для вращения
 	
 	double	raydir_x; //направление луча
 	double	raydir_y;
@@ -97,11 +102,20 @@ typedef struct	s_ray
 	int		step_x;
 	int		step_y;
 
-	int		hello_wall;
+	double	perp; //перпендикуляр
 
-	double	perpendicular;
+	int		side; //последний сдвиг по x или y (с какой стороны граница стены)
 
 }				t_ray;
+
+typedef struct	s_wall
+{
+	int		height;
+	int		start;
+	int		end;
+	int		ceiling;
+
+}				t_wall;
 
 typedef struct	s_head
 {
@@ -114,11 +128,13 @@ typedef struct	s_head
 	t_data			data;
 	t_color			color;
 	t_ray			ray;
+	t_wall			wall;
 }				t_head;
 
 int		main(int argc, char **argv);
 void	parse_player(t_head *head);
 void	render_all(t_head *h);
+void	draw_wall(t_head *h);
 //void	print_map(t_struct *h);
 //void	print_square(t_struct *h, int i, int j, unsigned int color);
 //void	print_ray(t_struct *h);

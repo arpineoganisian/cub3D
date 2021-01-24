@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/21 18:45:47 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/24 16:35:09 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,43 @@ void draw_wall(t_head *h)
 	int x;
 	
 	x = 0;
-	h->ray.plane_x = 0.66; //FOV
-	h->ray.plane_y = 0; //FOV
+
 	while (x < h->resol.x)
 	{
+		
+
+		h->ray.cam_y = 2 * x / (double)h->resol.x - 1; //в какой половине экрана (левая, середина, правая)
+		
+		h->ray.raydir_x = h->player.dir_x + h->ray.plane_x * h->ray.cam_y; //могут быть -1, 0, 1
+		h->ray.raydir_y = h->player.dir_y + h->ray.plane_y * h->ray.cam_y;
+		
 		h->ray.map_x = (int)h->player.x; //задаем координаты квадратика map_xy (начала луча) такие же, как у игрока
 		h->ray.map_y = (int)h->player.y;
+		
+		if (h->ray.raydir_y == 0)
+			h->ray.delta_x = 0;
+		else
+		{
+			h->ray.raydir_x == 0 ? h->ray.delta_x = 1 :
+				(h->ray.delta_x = fabs(1 / h->ray.raydir_x));
+		}
+		if (h->ray.raydir_x == 0)
+			h->ray.delta_y = 0;
+		else
+		{
+			h->ray.raydir_y == 0 ? h->ray.delta_y = 1 :
+				(h->ray.delta_y = fabs(1 / h->ray.raydir_y));
+		}
+						
+	//	h->ray.delta_x = fabs(1 / h->ray.raydir_x);
+	//	h->ray.delta_y = fabs(1 / h->ray.raydir_y);
 
-		h->ray.cam_x = 2 * x / (double)h->resol.x - 1; //в какой половине экрана (левая, середина, правая)
-		
-		h->ray.raydir_x = h->player.dir_x + h->ray.plane_x * h->ray.cam_x; //могут быть -1, 0, 1
-		h->ray.raydir_y = h->player.dir_y + h->ray.plane_y * h->ray.cam_x;
-		
-		h->ray.delta_x = fabs(1 / h->ray.raydir_x);
-		h->ray.delta_y = fabs(1 / h->ray.raydir_y);
+      // Alternative code for deltaDist in case division through zero is not supported
+//    double deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : abs(1 / rayDirX));
+//    double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : abs(1 / rayDirY));
 
 		//узнаем длину от начала луча до первого пересечения с целым x или у,
 		//зная дельту и разницу между началом луча по х/у и целым х/у
-		
 		if(h->ray.raydir_x < 0)
 		{
 			h->ray.step_x = -1;
@@ -55,17 +74,64 @@ void draw_wall(t_head *h)
 			h->ray.step_y = 1;
 			h->ray.first_side_y = (h->ray.map_y + 1.0 - h->player.y) * h->ray.delta_y;
 		}
+		//доходим лучом до стены
+		while(h->map[h->ray.map_y][h->ray.map_x] != '1')
+		{
+			if(h->ray.first_side_x < h->ray.first_side_y)
+			{
+				h->ray.first_side_x += h->ray.delta_x;
+				h->ray.map_x += h->ray.step_x;
+				h->ray.side = 0;
+			}
+			else
+			{
+				h->ray.first_side_y += h->ray.delta_y;
+				h->ray.map_y += h->ray.step_y;
+				h->ray.side = 1;
+			}
+		}
+		//рассчитываем расстояние, от плоскости игрока на экран (чтобы избежать фиш ай)
+		if(h->ray.side == 0)
+			h->ray.perp = (h->ray.map_x - h->player.x + (1 - h->ray.step_x) / 2) / h->ray.raydir_x;
+		else
+			h->ray.perp = (h->ray.map_y - h->player.y + (1 - h->ray.step_y) / 2) / h->ray.raydir_y;
+		
+		//задаем длину стенки
+		h->wall.height = (int)(h->resol.y / h->ray.perp);
 
+		//задем верхний и нижний пиксель
+		h->wall.start = -h->wall.height / 2 + h->resol.y / 2;
+		h->wall.start < 0 ? (h->wall.start = 0) : 0;
+		h->wall.end = h->wall.height / 2 + h->resol.y / 2;
+		h->wall.end >= h->resol.y ? (h->wall.end = h->resol.y - 1) : 0;
+		
+		h->wall.ceiling = 0;
 
+		while(h->wall.ceiling < h->wall.start)
+		{
+			my_pixel_put(h, x, h->wall.ceiling, h->color.ceiling_color);
+			h->wall.ceiling++;
+		}
 
-
-
+		while(h->wall.start <= h->wall.end)
+		{
+			my_pixel_put(h, x, h->wall.start, WALL_COLOR);
+			h->wall.start++;
+		}
+		while(h->wall.end < h->resol.y)
+		{
+			my_pixel_put(h, x, h->wall.end, h->color.floor_color);
+			h->wall.end++;
+		}
 		x++;
 	}
 }
 
 void	render_all(t_head *h)
 {
+	int	max_x;
+	int	max_y;
+
 	h->mnlbx.mlx = mlx_init();
 	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.x, h->resol.y, "cub3D");
 	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
@@ -74,6 +140,8 @@ void	render_all(t_head *h)
 	parse_player(h);
 
 	draw_wall(h);
+
+	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);
 
 	mlx_put_image_to_window(h->mnlbx.mlx, h->mnlbx.mlx_win, h->data.img, 0, 0);
 
