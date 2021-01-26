@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 16:15:18 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/26 18:50:33 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,12 @@ typedef struct	s_wall
 	double	scale; //насколько увеличиваем координату текстуры на пиксель экрана
 //	double	tex_pos;
 	unsigned int color;
-
 }				t_wall;
 
 typedef struct	s_texture
 {	
 	int		*img; //сама картинка с текстурой
-	int		*addr;
+	char	*addr;
     
 	char    *path;
     int     x;
@@ -153,19 +152,18 @@ typedef struct	s_head
 	t_texture		tex_s;
 	t_texture		tex_w;
 	t_texture		tex_e;
-	
 }				t_head;
 
-int		main(int argc, char **argv);
-void	parse_player(t_head *head);
-void	render_all(t_head *h);
-void	draw_wall(t_head *h);
+int				main(int argc, char **argv);
+void			parse_player(t_head *head);
+void			render_all(t_head *h);
+void			draw_wall(t_head *h);
 //void	print_map(t_struct *h);
 //void	print_square(t_struct *h, int i, int j, unsigned int color);
 //void	print_ray(t_struct *h);
-int		move(int keycode, t_head *h);
-void	my_pixel_put(t_head *h, int x, int y, int color);
-int		x_close();
-unsigned int	tex_to_pix(t_head *h, int x, int y);
+int				move(int keycode, t_head *h);
+void			my_pixel_put(t_head *h, int x, int y, int color);
+int				x_close();
+unsigned int	tex_to_pix(t_texture *tex, int x, int y);
 
 #endif

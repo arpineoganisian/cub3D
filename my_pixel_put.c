@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 20:55:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 13:44:17 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/26 18:51:12 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void	my_pixel_put(t_head *h, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-unsigned int	tex_to_pix(t_head *h, int x, int y)
+unsigned int	tex_to_pix(t_texture *tex, int x, int y)
 {
-	int				*dst;
+	char			*dst;
 	unsigned int	color;
 
-	dst = h->tex_n.addr + (y * h->tex_n.line_length + x * (h->tex_n.bpp / 8));
+	dst = tex->addr + (y * tex->line_length + x * (tex->bpp / 8));
 	color = *(unsigned int*)dst;
 	return(color);
 }

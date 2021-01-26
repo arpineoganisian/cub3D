@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 16:25:36 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/26 19:38:45 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ void draw_wall(t_head *h)
 
 		//где именно луч достиг стену по x
 		if(h->ray.side == 0)
-			h->wall.x = h->player.x + h->ray.perp * h->ray.raydir_x;
-		else 
 			h->wall.x = h->player.y + h->ray.perp * h->ray.raydir_y;
+		else 
+			h->wall.x = h->player.x + h->ray.perp * h->ray.raydir_x;
 		h->wall.x -= floor(h->wall.x);
 		
 		//нужная х-координата текстуры
@@ -127,9 +127,20 @@ void draw_wall(t_head *h)
 		}
 		while(h->wall.start <= h->wall.end)
 		{
-			h->wall.tex_y = (int)h->wall.y % TEX_SIZE - 1;
+			h->wall.tex_y = (int)h->wall.y & (TEX_SIZE - 1);
 			h->wall.y += h->wall.scale;
-			h->wall.color = tex_to_pix(h, h->wall.tex_x, h->wall.tex_y);
+			if(h->ray.side == 0 && h->player.x > h->ray.raydir_x + h->player.x)
+				h->wall.color = tex_to_pix(&h->tex_n, h->wall.tex_x, h->wall.tex_y);
+
+			if(h->ray.side == 1 && h->player.x < h->ray.raydir_x + h->player.x)
+				h->wall.color = tex_to_pix(&h->tex_s, h->wall.tex_x, h->wall.tex_y);
+
+			if(h->ray.side == 0 && h->player.y > h->ray.raydir_y + h->player.y)
+				h->wall.color = tex_to_pix(&h->tex_w, h->wall.tex_x, h->wall.tex_y);
+
+			if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
+				h->wall.color = tex_to_pix(&h->tex_e, h->wall.tex_x, h->wall.tex_y);
+
 			my_pixel_put(h, x, h->wall.start, h->wall.color);
 			h->wall.start++;	
 		}
@@ -155,16 +166,16 @@ void	render_all(t_head *h)
 	parse_player(h);
 
 	h->tex_n.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_n.path, &h->tex_n.x, &h->tex_n.y);
-	h->tex_n.addr = (int*)mlx_get_data_addr(h->tex_n.img, &h->tex_n.bpp, &h->tex_n.line_length, &h->tex_n.endian);
+	h->tex_n.addr = mlx_get_data_addr(h->tex_n.img, &h->tex_n.bpp, &h->tex_n.line_length, &h->tex_n.endian);
 
 	h->tex_s.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_s.path, &h->tex_s.x, &h->tex_s.y);
-	h->tex_s.addr = (int*)mlx_get_data_addr(h->tex_s.img, &h->tex_s.bpp, &h->tex_s.line_length, &h->tex_s.endian);
+	h->tex_s.addr = mlx_get_data_addr(h->tex_s.img, &h->tex_s.bpp, &h->tex_s.line_length, &h->tex_s.endian);
 
 	h->tex_w.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_w.path, &h->tex_w.x, &h->tex_w.y);
-	h->tex_w.addr = (int*)mlx_get_data_addr(h->tex_w.img, &h->tex_w.bpp, &h->tex_w.line_length, &h->tex_w.endian);
+	h->tex_w.addr = mlx_get_data_addr(h->tex_w.img, &h->tex_w.bpp, &h->tex_w.line_length, &h->tex_w.endian);
 
 	h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_e.path, &h->tex_e.x, &h->tex_e.y);
-	h->tex_e.addr = (int*)mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
+	h->tex_e.addr = mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
 
 	draw_wall(h);
 
