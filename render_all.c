@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 19:38:45 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/26 19:40:02 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,10 @@ void draw_wall(t_head *h)
 			if(h->ray.side == 0 && h->player.x > h->ray.raydir_x + h->player.x)
 				h->wall.color = tex_to_pix(&h->tex_n, h->wall.tex_x, h->wall.tex_y);
 
-			if(h->ray.side == 1 && h->player.x < h->ray.raydir_x + h->player.x)
+			if(h->ray.side == 0 && h->player.x < h->ray.raydir_x + h->player.x)
 				h->wall.color = tex_to_pix(&h->tex_s, h->wall.tex_x, h->wall.tex_y);
 
-			if(h->ray.side == 0 && h->player.y > h->ray.raydir_y + h->player.y)
+			if(h->ray.side == 1 && h->player.y > h->ray.raydir_y + h->player.y)
 				h->wall.color = tex_to_pix(&h->tex_w, h->wall.tex_x, h->wall.tex_y);
 
 			if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
