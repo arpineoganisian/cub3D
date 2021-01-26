@@ -1,9 +1,9 @@
 R    1200 1000
 
-NO ./path_to_the_north_texture
-SO  ./path_to_the_south_texture
-WE   ./path_to_the_west_texture
-EA    ./path_to_the_east_texture
+NO ./textures/bluestone.xpm
+SO  ./textures/colorstone.xpm
+WE   ./textures/purplestone.xpm
+EA    ./textures/greystone.xpm
 
 S ./path_to_the_sprite_texture
 F 243,170,215
@@ -18,7 +18,7 @@ C 243,252,215
 11110111111111011100000010001
 11110111111111011101010010001
 11000000110101011100000010001
-1000E00000000001100000010001
+10W0000000000001100000010001
 10000000000000001101010010001
 1100000111010101111101111000111
 11110111 1110101 101111010001

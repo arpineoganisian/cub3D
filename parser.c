@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/23 20:29:16 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/25 14:20:20 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,19 @@ int parse_colors(t_head *h, char *s, char c)
 	return (-1);
 }
 
+void parse_textures(t_head *h, char *s, char side)
+{
+	int	i;
+
+	i = 3;
+	while(s[i] == ' ')
+		i++;
+	side == 'N' ? h->tex_n.path = s + i : 0;
+	side == 'S' ? h->tex_s.path = s + i : 0;
+	side == 'W' ? h->tex_w.path = s + i : 0;
+	side == 'E' ? h->tex_e.path = s + i : 0;
+}
+
 void parse(t_head *h)
 {
 	int j;
@@ -134,12 +147,16 @@ void parse(t_head *h)
 		if (h->map[j][0] == 'R' && h->map[j][1] == ' ')
 			if (parse_resolution(h, h->map[j]))
 				return ;
-        //if (h->map[j][0] == 'N' && h->map[j][1] == 'O' && h->map[j][2] == ' ')
-        //if (h->map[j][0] == 'S' && h->map[j][1] == 'O' && h->map[j][2] == ' ')
-        //if (h->map[j][0] == 'W' && h->map[j][1] == 'E' && h->map[j][2] == ' ')
-        //if (h->map[j][0] == 'E' && h->map[j][1] == 'A' && h->map[j][2] == ' ')
+        if (h->map[j][0] == 'N' && h->map[j][1] == 'O' && h->map[j][2] == ' ')
+			parse_textures(h, h->map[j], h->map[j][0]);
+		if (h->map[j][0] == 'S' && h->map[j][1] == 'O' && h->map[j][2] == ' ')
+			parse_textures(h, h->map[j], h->map[j][0]);
+        if (h->map[j][0] == 'W' && h->map[j][1] == 'E' && h->map[j][2] == ' ')
+			parse_textures(h, h->map[j], h->map[j][0]);
+        if (h->map[j][0] == 'E' && h->map[j][1] == 'A' && h->map[j][2] == ' ')
+			parse_textures(h, h->map[j], h->map[j][0]);
 		//if (h->map[j][0] == 'S' && h->map[j][1] == ' ')
-        if (h->map[j][0] == 'F' && h->map[j][1] == ' ')
+		if (h->map[j][0] == 'F' && h->map[j][1] == ' ')
 			if (parse_colors(h, h->map[j], h->map[j][0]))
 				return ;
         if (h->map[j][0] == 'C' && h->map[j][1] == ' ')
@@ -152,6 +169,7 @@ void parse(t_head *h)
         }
         j++;
     }
+
 }
 
 int main(int argc, char **argv)

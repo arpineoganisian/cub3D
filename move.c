@@ -33,9 +33,7 @@ void ft_clean_window(t_head *h)
 int move(int keycode, t_head *h)
  {
 	//printf("%d\n", keycode);
-	double rotation;
 
-	rotation = 0.05;
 	ft_clean_window(h);
 	if (keycode == W)
 	{
@@ -68,20 +66,20 @@ int move(int keycode, t_head *h)
 	if (keycode == LEFT)
 	{
 		h->player.old_dir_x = h->player.dir_x;
-		h->player.dir_x = h->player.dir_x * cos(-rotation) - h->player.dir_y * sin(-rotation);
-		h->player.dir_y = h->player.old_dir_x * sin(-rotation) + h->player.dir_y * cos(-rotation);
+		h->player.dir_x = h->player.dir_x * cos(-ROTATION) - h->player.dir_y * sin(-ROTATION);
+		h->player.dir_y = h->player.old_dir_x * sin(-ROTATION) + h->player.dir_y * cos(-ROTATION);
 		h->ray.old_plane_x = h->ray.plane_x;
-		h->ray.plane_x = h->ray.plane_x * cos(-rotation) - h->ray.plane_y * sin(-rotation);
-		h->ray.plane_y = h->ray.old_plane_x * sin(-rotation) + h->ray.plane_y * cos(-rotation);
+		h->ray.plane_x = h->ray.plane_x * cos(-ROTATION) - h->ray.plane_y * sin(-ROTATION);
+		h->ray.plane_y = h->ray.old_plane_x * sin(-ROTATION) + h->ray.plane_y * cos(-ROTATION);
 	}
 	if (keycode == RIGHT)
 	{
 		h->player.old_dir_x = h->player.dir_x;
-		h->player.dir_x = h->player.dir_x * cos(rotation) - h->player.dir_y * sin(rotation);
-		h->player.dir_y = h->player.old_dir_x * sin(rotation) + h->player.dir_y * cos(rotation);
+		h->player.dir_x = h->player.dir_x * cos(ROTATION) - h->player.dir_y * sin(ROTATION);
+		h->player.dir_y = h->player.old_dir_x * sin(ROTATION) + h->player.dir_y * cos(ROTATION);
 		h->ray.old_plane_x = h->ray.plane_x;
-		h->ray.plane_x = h->ray.plane_x * cos(rotation) - h->ray.plane_y * sin(rotation);
-		h->ray.plane_y = h->ray.old_plane_x * sin(rotation) + h->ray.plane_y * cos(rotation);
+		h->ray.plane_x = h->ray.plane_x * cos(ROTATION) - h->ray.plane_y * sin(ROTATION);
+		h->ray.plane_y = h->ray.old_plane_x * sin(ROTATION) + h->ray.plane_y * cos(ROTATION);
 	}
 	if (keycode == ESC)
 	{
@@ -90,6 +88,7 @@ int move(int keycode, t_head *h)
 	}
 	draw_wall(h);
 	mlx_put_image_to_window(h->mnlbx.mlx, h->mnlbx.mlx_win, h->data.img, 0, 0);
+	
 	return (0);
 }
 

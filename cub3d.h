@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/22 17:20:35 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/26 16:15:18 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,11 @@
 #define A 0
 #define D 2
 #define S 1
+#define ROTATION 0.05
 #define LEFT 123
 #define RIGHT 124
-#define WALL_COLOR 0xF3D9D7
-
-
-
-
+#define WALL_COLOR 0xF3D9D7 
+#define TEX_SIZE 64 //ширина и высота текстуры
 
 typedef struct 	s_mnlbx
 {
@@ -44,7 +42,7 @@ typedef struct 	s_mnlbx
 
 typedef struct	s_data
 {
-	void	*img; // открывает файл и достает в image
+	void	*img; //открывает файл и достает в image
 	char	*addr;
 	int		bpp;
 	int		line_length;
@@ -77,7 +75,7 @@ typedef struct	s_player
 	double	dir_x; //направление игрока, т.е. в какую сторону он будет смещаться по х и у
 	double	dir_y; 
 	double	old_dir_x; // для вращения
-	double	rot; //rotation
+//	double	rot; //rotation
 }				t_player;
 
 typedef struct	s_ray
@@ -115,7 +113,29 @@ typedef struct	s_wall
 	int		end;
 	int		ceiling;
 
+	double	x; //wallX - точное значение места удара о стену
+	double	y; //texPos
+	int		tex_x; //какую именно координату по х берем из текстуры
+	int		tex_y;
+	double	scale; //насколько увеличиваем координату текстуры на пиксель экрана
+//	double	tex_pos;
+	unsigned int color;
+
 }				t_wall;
+
+typedef struct	s_texture
+{	
+	int		*img; //сама картинка с текстурой
+	int		*addr;
+    
+	char    *path;
+    int     x;
+    int     y;
+
+	int		bpp;
+	int		line_length;
+	int		endian; //порядок байтов
+}				t_texture;
 
 typedef struct	s_head
 {
@@ -129,6 +149,11 @@ typedef struct	s_head
 	t_color			color;
 	t_ray			ray;
 	t_wall			wall;
+	t_texture		tex_n;
+	t_texture		tex_s;
+	t_texture		tex_w;
+	t_texture		tex_e;
+	
 }				t_head;
 
 int		main(int argc, char **argv);
@@ -141,5 +166,6 @@ void	draw_wall(t_head *h);
 int		move(int keycode, t_head *h);
 void	my_pixel_put(t_head *h, int x, int y, int color);
 int		x_close();
+unsigned int	tex_to_pix(t_head *h, int x, int y);
 
 #endif
