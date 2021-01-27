@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 19:40:02 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/27 13:47:43 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ void draw_wall(t_head *h)
 		else 
 			h->wall.x = h->player.x + h->ray.perp * h->ray.raydir_x;
 		h->wall.x -= floor(h->wall.x);
-		
+
+
 		//нужная х-координата текстуры
 		h->wall.tex_x = (int)(h->wall.x * TEX_SIZE);
 		if((h->ray.side == 0 && h->ray.raydir_x > 0) || (h->ray.side == 1 && h->ray.raydir_y < 0))
@@ -130,16 +131,16 @@ void draw_wall(t_head *h)
 			h->wall.tex_y = (int)h->wall.y & (TEX_SIZE - 1);
 			h->wall.y += h->wall.scale;
 			if(h->ray.side == 0 && h->player.x > h->ray.raydir_x + h->player.x)
-				h->wall.color = tex_to_pix(&h->tex_n, h->wall.tex_x, h->wall.tex_y);
-
-			if(h->ray.side == 0 && h->player.x < h->ray.raydir_x + h->player.x)
-				h->wall.color = tex_to_pix(&h->tex_s, h->wall.tex_x, h->wall.tex_y);
-
-			if(h->ray.side == 1 && h->player.y > h->ray.raydir_y + h->player.y)
 				h->wall.color = tex_to_pix(&h->tex_w, h->wall.tex_x, h->wall.tex_y);
 
-			if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
+			if(h->ray.side == 0 && h->player.x < h->ray.raydir_x + h->player.x)
 				h->wall.color = tex_to_pix(&h->tex_e, h->wall.tex_x, h->wall.tex_y);
+
+			if(h->ray.side == 1 && h->player.y > h->ray.raydir_y + h->player.y)
+				h->wall.color = tex_to_pix(&h->tex_n, h->wall.tex_x, h->wall.tex_y);
+
+			if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
+				h->wall.color = tex_to_pix(&h->tex_s, h->wall.tex_x, h->wall.tex_y);
 
 			my_pixel_put(h, x, h->wall.start, h->wall.color);
 			h->wall.start++;	

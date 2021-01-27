@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 20:55:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 18:51:12 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/27 13:44:01 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ unsigned int	tex_to_pix(t_texture *tex, int x, int y)
 	char			*dst;
 	unsigned int	color;
 
-	dst = tex->addr + (y * tex->line_length + x * (tex->bpp / 8));
+	dst = tex->addr + (y * tex->line_length + (tex->x - x - 1) * (tex->bpp / 8));
 	color = *(unsigned int*)dst;
 	return(color);
 }
