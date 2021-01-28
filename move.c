@@ -37,33 +37,32 @@ int move(int keycode, t_head *h)
 	ft_clean_window(h);
 	if (keycode == W)
 	{
-		if (h->map[(int)(h->player.y + h->player.dir_y * 0.1)][(int)h->player.x] != '1')
+		if (h->map[(int)(h->player.y + h->player.dir_y * 0.2)][(int)h->player.x] != '1')
 			h->player.y += h->player.dir_y * 0.1;
-		if (h->map[(int)h->player.y][(int)(h->player.x + h->player.dir_x * 0.1)] != '1')
+		if (h->map[(int)h->player.y][(int)(h->player.x + h->player.dir_x * 0.2)] != '1')
 			h->player.x += h->player.dir_x * 0.1;
 	}
 	if (keycode == S)
 	{
-		if (h->map[(int)(h->player.y - h->player.dir_y * 0.1)][(int)h->player.x] != '1')
+		if (h->map[(int)(h->player.y - h->player.dir_y * 0.2)][(int)h->player.x] != '1')
 			h->player.y -= h->player.dir_y * 0.1;
-		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * 0.1)] != '1')
+		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * 0.2)] != '1')
 			h->player.x -= h->player.dir_x * 0.1;
 	}
 	if (keycode == A)
 	{
-		if (h->map[(int)(h->player.y - h->player.dir_x * 0.1)][(int)h->player.x] != '1')
+		if (h->map[(int)(h->player.y - h->player.dir_x * 0.2)][(int)h->player.x] != '1')
 			h->player.y -= h->player.dir_x * 0.1;
-		if (h->map[(int)h->player.y][(int)(h->player.x + h->player.dir_y * 0.1)] != '1')
+		if (h->map[(int)h->player.y][(int)(h->player.x + h->player.dir_y * 0.2)] != '1')
 			h->player.x += h->player.dir_y * 0.1;
 	}
 	if (keycode == D)
 	{
-		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_y * 0.1)] != '1' && h->map[(int)(h->player.y + h->player.dir_x * 0.1)][(int)h->player.x] != '1')
+		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_y * 0.2)] != '1' && h->map[(int)(h->player.y + h->player.dir_x * 0.2)][(int)h->player.x])
 		{
 			h->player.x -= h->player.dir_y * 0.1;
 			h->player.y += h->player.dir_x * 0.1;
 		}
-		
 	}
 	if (keycode == LEFT)
 	{

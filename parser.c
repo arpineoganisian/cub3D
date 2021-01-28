@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/26 21:03:24 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/27 20:00:25 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int parse_colors(t_head *h, char *s, char c)
 	return (-1);
 }
 
-void parse_textures(t_head *h, char *s, char side)
+int parse_textures(t_head *h, char *s, char side)
 {
 	int	i;
 
@@ -134,6 +134,20 @@ void parse_textures(t_head *h, char *s, char side)
 	side == 'S' ? h->tex_s.path = s + i : 0;
 	side == 'W' ? h->tex_w.path = s + i : 0;
 	side == 'E' ? h->tex_e.path = s + i : 0;
+	
+	//if()
+	return(0);
+
+}
+
+void	parse_sprite(t_head *h, char *s)
+{
+	int	i;
+
+	i = 2;
+	while (s[i] == ' ')
+		i++;
+	h->sprite.path = s + i;
 }
 
 void parse(t_head *h)
@@ -155,7 +169,8 @@ void parse(t_head *h)
 			parse_textures(h, h->map[j], h->map[j][0]);
         if (h->map[j][0] == 'E' && h->map[j][1] == 'A' && h->map[j][2] == ' ')
 			parse_textures(h, h->map[j], h->map[j][0]);
-		//if (h->map[j][0] == 'S' && h->map[j][1] == ' ')
+		if (h->map[j][0] == 'S' && h->map[j][1] == ' ')
+			parse_sprite(h, h->map[j]);
 		if (h->map[j][0] == 'F' && h->map[j][1] == ' ')
 			if (parse_colors(h, h->map[j], h->map[j][0]))
 				return ;

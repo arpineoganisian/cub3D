@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/27 13:47:43 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/28 14:49:16 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void draw_wall(t_head *h)
 	int x;
 	
 	x = 0;
-
 	while (x < h->resol.x)
 	{
 		h->ray.cam_y = 2 * x / (double)h->resol.x - 1; //в какой половине экрана (левая, середина, правая)
@@ -27,25 +26,30 @@ void draw_wall(t_head *h)
 		
 		h->ray.map_x = (int)h->player.x; //задаем координаты квадратика map_xy (начала луча) такие же, как у игрока
 		h->ray.map_y = (int)h->player.y;
-		
-		//если деление на ноль не работает
-		// if (h->ray.raydir_y == 0)
-		// 	h->ray.delta_x = 0;
-		// else
-		// {
-		// 	h->ray.raydir_x == 0 ? h->ray.delta_x = 1 :
-		// 		(h->ray.delta_x = fabs(1 / h->ray.raydir_x));
-		// }
-		// if (h->ray.raydir_x == 0)
-		// 	h->ray.delta_y = 0;
-		// else
-		// {
-		// 	h->ray.raydir_y == 0 ? h->ray.delta_y = 1 :
-		// 		(h->ray.delta_y = fabs(1 / h->ray.raydir_y));
-		// }
-						
-		h->ray.delta_x = fabs(1 / h->ray.raydir_x);
-		h->ray.delta_y = fabs(1 / h->ray.raydir_y);
+
+		if (h->ray.raydir_y == 0)
+			h->ray.delta_x = 0;
+		else
+		{
+			h->ray.raydir_x == 0 ? h->ray.delta_x = 1 :
+				(h->ray.delta_x = fabs(1 / h->ray.raydir_x));
+		}
+		if (h->ray.raydir_x == 0)
+			h->ray.delta_y = 0;
+		else
+		{
+			h->ray.raydir_y == 0 ? h->ray.delta_y = 1 :
+				(h->ray.delta_y = fabs(1 / h->ray.raydir_y));
+		}
+
+		//h->ray.delta_x = fabs(1 / h->ray.raydir_x);
+		//h->ray.delta_y = fabs(1 / h->ray.raydir_y);
+
+
+
+
+
+
 
 		//узнаем длину от начала луча до первого пересечения с целым x или у,
 		//зная дельту и разницу между началом луча по х/у и целым х/у
@@ -69,6 +73,13 @@ void draw_wall(t_head *h)
 			h->ray.step_y = 1;
 			h->ray.first_side_y = (h->ray.map_y + 1.0 - h->player.y) * h->ray.delta_y;
 		}
+
+
+
+
+
+
+
 		//доходим лучом до стены
 		while(h->map[h->ray.map_y][h->ray.map_x] != '1')
 		{
@@ -98,7 +109,7 @@ void draw_wall(t_head *h)
 		h->wall.start = -h->wall.height / 2 + h->resol.y / 2;
 		h->wall.start < 0 ? (h->wall.start = 0) : 0;
 		h->wall.end = h->wall.height / 2 + h->resol.y / 2;
-		h->wall.end >= h->resol.y ? (h->wall.end = h->resol.y - 1) : 0;
+		h->wall.end >= h->resol.y || h->wall.end < 0 ? (h->wall.end = h->resol.y - 1) : 0;
 		
 		h->wall.ceiling = 0;
 
@@ -109,14 +120,26 @@ void draw_wall(t_head *h)
 			h->wall.x = h->player.x + h->ray.perp * h->ray.raydir_x;
 		h->wall.x -= floor(h->wall.x);
 
+		//выбираю структуру в зависимости от стены
+		if(h->ray.side == 0 && h->player.x > h->ray.raydir_x + h->player.x)
+			h->current_tex = h->tex_w;
+
+		if(h->ray.side == 0 && h->player.x < h->ray.raydir_x + h->player.x)
+			h->current_tex = h->tex_e;
+
+		if(h->ray.side == 1 && h->player.y > h->ray.raydir_y + h->player.y)
+			h->current_tex = h->tex_n;
+
+		if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
+			h->current_tex = h->tex_s;
 
 		//нужная х-координата текстуры
-		h->wall.tex_x = (int)(h->wall.x * TEX_SIZE);
+		h->wall.tex_x = (int)(h->wall.x * h->current_tex.x);
 		if((h->ray.side == 0 && h->ray.raydir_x > 0) || (h->ray.side == 1 && h->ray.raydir_y < 0))
-			h->wall.tex_x = TEX_SIZE - h->wall.tex_x - 1;
+			h->wall.tex_x = h->current_tex.x - h->wall.tex_x - 1;
 
 		//насколько увеличиваем координату текстуры на пиксель экрана
-		h->wall.scale = 1.0 * TEX_SIZE / h->wall.height;
+		h->wall.scale = 1.0 * h->current_tex.y / h->wall.height;
 
 		//начальная координата текстуры
 		h->wall.y = (h->wall.start - h->resol.y / 2 + h->wall.height / 2) * h->wall.scale;
@@ -128,19 +151,10 @@ void draw_wall(t_head *h)
 		}
 		while(h->wall.start <= h->wall.end)
 		{
-			h->wall.tex_y = (int)h->wall.y & (TEX_SIZE - 1);
+			h->wall.tex_y = (int)h->wall.y & (h->current_tex.x - 1);
 			h->wall.y += h->wall.scale;
-			if(h->ray.side == 0 && h->player.x > h->ray.raydir_x + h->player.x)
-				h->wall.color = tex_to_pix(&h->tex_w, h->wall.tex_x, h->wall.tex_y);
 
-			if(h->ray.side == 0 && h->player.x < h->ray.raydir_x + h->player.x)
-				h->wall.color = tex_to_pix(&h->tex_e, h->wall.tex_x, h->wall.tex_y);
-
-			if(h->ray.side == 1 && h->player.y > h->ray.raydir_y + h->player.y)
-				h->wall.color = tex_to_pix(&h->tex_n, h->wall.tex_x, h->wall.tex_y);
-
-			if(h->ray.side == 1 && h->player.y < h->ray.raydir_y + h->player.y)
-				h->wall.color = tex_to_pix(&h->tex_s, h->wall.tex_x, h->wall.tex_y);
+			h->wall.color = tex_to_pix(&h->current_tex, h->wall.tex_x, h->wall.tex_y);
 
 			my_pixel_put(h, x, h->wall.start, h->wall.color);
 			h->wall.start++;	
@@ -178,6 +192,9 @@ void	render_all(t_head *h)
 	h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_e.path, &h->tex_e.x, &h->tex_e.y);
 	h->tex_e.addr = mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
 
+	// h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->sprite.path, &h->sprite.x, &h->sprite.y);
+	// h->tex_e.addr = mlx_get_data_addr(h->sprite.img, &h->sprite.bpp, &h->sprite.line_length, &h->sprite.endian);
+	
 	draw_wall(h);
 
 	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);

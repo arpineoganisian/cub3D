@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/27 13:51:40 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:49:42 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # include <stdio.h> // УДАЛИТЬ
 
-#define SCALE 15
+//#define SCALE 15
 
 #define ESC 53
 #define W 13
@@ -31,8 +31,7 @@
 #define ROTATION 0.05
 #define LEFT 123
 #define RIGHT 124
-#define WALL_COLOR 0xF3D9D7 
-#define TEX_SIZE 64 //ширина и высота текстуры
+//#define WALL_COLOR 0xF3D9D7 
 
 typedef struct 	s_mnlbx
 {
@@ -136,6 +135,20 @@ typedef struct	s_texture
 	int		endian; //порядок байтов
 }				t_texture;
 
+typedef struct	s_sprite
+{	
+	int		*img; //сама картинка с текстурой
+	char	*addr;
+    
+	char    *path;
+    int     x;
+    int     y;
+
+	int		bpp;
+	int		line_length;
+	int		endian; //порядок байтов
+}				t_sprite;
+
 typedef struct	s_head
 {
 	char			**map;
@@ -152,6 +165,8 @@ typedef struct	s_head
 	t_texture		tex_s;
 	t_texture		tex_w;
 	t_texture		tex_e;
+	t_texture		current_tex; //текущая текстура (чтобы работало с разными размерами текстур)
+	t_sprite		sprite;
 }				t_head;
 
 int				main(int argc, char **argv);
