@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/27 20:00:25 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/29 20:57:38 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ int parse_textures(t_head *h, char *s, char side)
 	
 	//if()
 	return(0);
-
 }
 
 void	parse_sprite(t_head *h, char *s)
@@ -148,6 +147,50 @@ void	parse_sprite(t_head *h, char *s)
 	while (s[i] == ' ')
 		i++;
 	h->sprite.path = s + i;
+
+}
+
+void parse_sprite_pos(t_head *h)
+{
+	int i;
+	int j;
+	int cnt;
+
+	cnt = 0;
+	h->sprite.num = 0;
+	j = h->start_map;
+	while (h->map[j])
+	{
+		i = 0;
+		while (h->map[j][i])
+		{
+			if (h->map[j][i] == '2')
+				h->sprite.num++;
+			i++;
+		}
+		j++;
+	}
+	if (!(h->sprite.x_arr = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+		return ;
+	if (!(h->sprite.y_arr = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+		return ;
+	j = h->start_map;
+	while (h->map[j])
+	{
+		i = 0;
+		while (h->map[j][i])
+		{
+			if (h->map[j][i] == '2')
+			{
+				h->sprite.x_arr[cnt] = i;
+				h->sprite.y_arr[cnt] = j;
+				cnt++;
+			}
+			i++;
+		}
+		j++;
+	}
+
 }
 
 void parse(t_head *h)
@@ -155,7 +198,6 @@ void parse(t_head *h)
 	int j;
 
 	j = 0;
-
 	while(h->map[j])
 	{
 		if (h->map[j][0] == 'R' && h->map[j][1] == ' ')
@@ -180,11 +222,12 @@ void parse(t_head *h)
 		if (h->map[j][0] == ' ' || h->map[j][0] == '0' || h->map[j][0] == '1')
         {
 			h->start_map = j;
+			parse_sprite_pos(h);
+			parse_player(h);
             render_all(h);
         }
         j++;
     }
-
 }
 
 int main(int argc, char **argv)

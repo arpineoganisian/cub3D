@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/27 19:49:42 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/29 20:59:33 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,15 @@
 
 # include <stdio.h> // УДАЛИТЬ
 
-//#define SCALE 15
-
 #define ESC 53
 #define W 13
 #define A 0
 #define D 2
 #define S 1
 #define ROTATION 0.05
+#define MOVE 0.1
 #define LEFT 123
 #define RIGHT 124
-//#define WALL_COLOR 0xF3D9D7 
 
 typedef struct 	s_mnlbx
 {
@@ -117,7 +115,6 @@ typedef struct	s_wall
 	int		tex_x; //какую именно координату по х берем из текстуры
 	int		tex_y;
 	double	scale; //насколько увеличиваем координату текстуры на пиксель экрана
-//	double	tex_pos;
 	unsigned int color;
 }				t_wall;
 
@@ -139,14 +136,18 @@ typedef struct	s_sprite
 {	
 	int		*img; //сама картинка с текстурой
 	char	*addr;
-    
-	char    *path;
-    int     x;
-    int     y;
-
 	int		bpp;
 	int		line_length;
 	int		endian; //порядок байтов
+	
+	char    *path;
+    int     w; // переим
+    int     h;	// переим
+	
+	int		num;
+	// double 	*buf;
+	double	*x_arr;
+	double	*y_arr;
 }				t_sprite;
 
 typedef struct	s_head
@@ -173,9 +174,6 @@ int				main(int argc, char **argv);
 void			parse_player(t_head *head);
 void			render_all(t_head *h);
 void			draw_wall(t_head *h);
-//void	print_map(t_struct *h);
-//void	print_square(t_struct *h, int i, int j, unsigned int color);
-//void	print_ray(t_struct *h);
 int				move(int keycode, t_head *h);
 void			my_pixel_put(t_head *h, int x, int y, int color);
 int				x_close();

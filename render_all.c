@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/28 14:49:16 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/29 21:00:00 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void draw_wall(t_head *h)
 {
 	int x;
+
 	
 	x = 0;
 	while (x < h->resol.x)
@@ -27,29 +28,23 @@ void draw_wall(t_head *h)
 		h->ray.map_x = (int)h->player.x; //задаем координаты квадратика map_xy (начала луча) такие же, как у игрока
 		h->ray.map_y = (int)h->player.y;
 
-		if (h->ray.raydir_y == 0)
-			h->ray.delta_x = 0;
-		else
-		{
-			h->ray.raydir_x == 0 ? h->ray.delta_x = 1 :
-				(h->ray.delta_x = fabs(1 / h->ray.raydir_x));
-		}
-		if (h->ray.raydir_x == 0)
-			h->ray.delta_y = 0;
-		else
-		{
-			h->ray.raydir_y == 0 ? h->ray.delta_y = 1 :
-				(h->ray.delta_y = fabs(1 / h->ray.raydir_y));
-		}
+		// if (h->ray.raydir_y == 0)
+		// 	h->ray.delta_x = 0;
+		// else
+		// {
+		// 	h->ray.raydir_x == 0 ? h->ray.delta_x = 1 :
+		// 		(h->ray.delta_x = fabs(1 / h->ray.raydir_x));
+		// }
+		// if (h->ray.raydir_x == 0)
+		// 	h->ray.delta_y = 0;
+		// else
+		// {
+		// 	h->ray.raydir_y == 0 ? h->ray.delta_y = 1 :
+		// 		(h->ray.delta_y = fabs(1 / h->ray.raydir_y));
+		// }
 
-		//h->ray.delta_x = fabs(1 / h->ray.raydir_x);
-		//h->ray.delta_y = fabs(1 / h->ray.raydir_y);
-
-
-
-
-
-
+		h->ray.delta_x = fabs(1 / h->ray.raydir_x);
+		h->ray.delta_y = fabs(1 / h->ray.raydir_y);
 
 		//узнаем длину от начала луча до первого пересечения с целым x или у,
 		//зная дельту и разницу между началом луча по х/у и целым х/у
@@ -73,12 +68,6 @@ void draw_wall(t_head *h)
 			h->ray.step_y = 1;
 			h->ray.first_side_y = (h->ray.map_y + 1.0 - h->player.y) * h->ray.delta_y;
 		}
-
-
-
-
-
-
 
 		//доходим лучом до стены
 		while(h->map[h->ray.map_y][h->ray.map_x] != '1')
@@ -164,9 +153,23 @@ void draw_wall(t_head *h)
 			my_pixel_put(h, x, h->wall.end, h->color.floor_color);
 			h->wall.end++;
 		}
+		// h->sprite.buf[x] = h->ray.perp;
 		x++;
 	}
+
+
+	x = 0;
+	
+	//спрайты
+	while (x > h->sprite.num)
+	{
+		
+		x++;
+	}
+
 }
+
+
 
 void	render_all(t_head *h)
 {
@@ -178,7 +181,7 @@ void	render_all(t_head *h)
 	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
 	h->data.addr = mlx_get_data_addr(h->data.img, &h->data.bpp, &h->data.line_length, &h->data.endian);
 
-	parse_player(h);
+	//parse_player(h);
 
 	h->tex_n.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_n.path, &h->tex_n.x, &h->tex_n.y);
 	h->tex_n.addr = mlx_get_data_addr(h->tex_n.img, &h->tex_n.bpp, &h->tex_n.line_length, &h->tex_n.endian);
@@ -192,8 +195,9 @@ void	render_all(t_head *h)
 	h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_e.path, &h->tex_e.x, &h->tex_e.y);
 	h->tex_e.addr = mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
 
-	// h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->sprite.path, &h->sprite.x, &h->sprite.y);
-	// h->tex_e.addr = mlx_get_data_addr(h->sprite.img, &h->sprite.bpp, &h->sprite.line_length, &h->sprite.endian);
+	//спрайт
+	h->sprite.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->sprite.path, &h->sprite.w, &h->sprite.h);
+	h->sprite.addr = mlx_get_data_addr(h->sprite.img, &h->sprite.bpp, &h->sprite.line_length, &h->sprite.endian);
 	
 	draw_wall(h);
 
