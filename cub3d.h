@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/29 20:59:33 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/30 21:35:21 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,23 +132,30 @@ typedef struct	s_texture
 	int		endian; //порядок байтов
 }				t_texture;
 
-typedef struct	s_sprite
+
+typedef struct	s_sprite_buf
+{
+	double	x; //массив координат по x
+	double	y; //массив координат по у
+	int		order; //порядковый номер спрайтов
+	double	dist; //расстояние от игрока до спрайта
+}				t_sprite_buf;
+
+typedef struct		s_sprite
 {	
-	int		*img; //сама картинка с текстурой
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian; //порядок байтов
+	int				*img; //сама картинка с текстурой
+	char			*addr;
+	int				bpp;
+	int				line_length;
+	int				endian; //порядок байтов
 	
-	char    *path;
-    int     w; // переим
-    int     h;	// переим
+	char			*path;
+    int				w; //ширина текстуры 
+    int				h; //высота текстуры
 	
-	int		num;
-	// double 	*buf;
-	double	*x_arr;
-	double	*y_arr;
-}				t_sprite;
+	int				num;
+	t_sprite_buf	*buf;
+}					t_sprite;
 
 typedef struct	s_head
 {

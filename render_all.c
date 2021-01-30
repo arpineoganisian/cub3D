@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/29 21:00:00 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/30 22:07:29 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,23 +153,83 @@ void draw_wall(t_head *h)
 			my_pixel_put(h, x, h->wall.end, h->color.floor_color);
 			h->wall.end++;
 		}
-		// h->sprite.buf[x] = h->ray.perp;
 		x++;
 	}
-
-
-	x = 0;
-	
-	//спрайты
-	while (x > h->sprite.num)
-	{
-		
-		x++;
-	}
-
 }
 
+void quick_sort(t_head *h, double *dist, double left, double right)
+{
+	int pivot; // разрешающий элемент
+	int l_hold = left; //левая граница
+	int r_hold = right; // правая граница
+	pivot = dist[(int)left];
+	while (left < right) // пока границы не сомкнутся
+  	{
+		while ((dist[(int)right] <= pivot) && (left < right))
+			right--; // сдвигаем правую границу пока элемент [right] больше [pivot]
+		if (left != right) // если границы не сомкнулись
+		{
+			dist[(int)left] = dist[(int)right]; // перемещаем элемент [right] на место разрешающего
+			left++; // сдвигаем левую границу вправо
+		}
+		while ((dist[(int)left] >= pivot) && (left < right))
+			left++; // сдвигаем левую границу пока элемент [left] меньше [pivot]
+		if (left != right) // если границы не сомкнулись
+		{
+			dist[(int)right] = dist[(int)left]; // перемещаем элемент [left] на место [right]
+			right--; // сдвигаем правую границу вправо
+		}
+	}
+	dist[(int)left] = pivot; // ставим разрешающий элемент на место
+	pivot = left;
+	left = l_hold;
+	right = r_hold;
+	if (left < pivot) // Рекурсивно вызываем сортировку для левой и правой части массива
+		quick_sort(h, dist, left, pivot - 1);
+	if (right > pivot)
+		quick_sort(h, dist, pivot + 1, right);
+}
 
+void draw_sprites(t_head *h)
+{
+	int i;
+
+	i = 0;
+	while(i < h->sprite.num)
+	{
+		h->sprite.buf[i].order = i;
+		h->sprite.buf[i].dist = (h->player.x - h->sprite.buf[i].x) * (h->player.x - h->sprite.buf[i].x) + (h->player.y - h->sprite.buf[i].y) * (h->player.y - h->sprite.buf[i].y);
+		i++;
+	}
+
+	i = 0;
+	while(i < 3)
+	{
+		printf("%f\n", h->sprite.buf[i].dist);
+		i++;
+	}
+
+
+	//!сортировка (нулевой спрайт - самый дальний, рисуем его первым)
+	//quick_sort(h, h->sprite.dist, 0, h->sprite.num - 1);
+
+
+	// i = 0;
+	// while(i < 3)
+	// {
+	// 	printf("%f\n", h->sprite.buf[i].dist);
+	// 	i++;
+	// }
+
+	//i = 0;
+	// while(i < h->sprite.num)
+	// {
+	// 	//переводим положение камеры в положение относительно игрока
+	// 	h->sprite.x[i] = h->sprite.x[h->sprite.order[i]] - h->player.x;
+	// 	h->sprite.y[i] = h->sprite.y[h->sprite.order[i]] - h->player.y;
+	// 	i++;
+	// }
+}
 
 void	render_all(t_head *h)
 {
@@ -180,8 +240,6 @@ void	render_all(t_head *h)
 	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.x, h->resol.y, "cub3D");
 	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
 	h->data.addr = mlx_get_data_addr(h->data.img, &h->data.bpp, &h->data.line_length, &h->data.endian);
-
-	//parse_player(h);
 
 	h->tex_n.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_n.path, &h->tex_n.x, &h->tex_n.y);
 	h->tex_n.addr = mlx_get_data_addr(h->tex_n.img, &h->tex_n.bpp, &h->tex_n.line_length, &h->tex_n.endian);
@@ -200,6 +258,7 @@ void	render_all(t_head *h)
 	h->sprite.addr = mlx_get_data_addr(h->sprite.img, &h->sprite.bpp, &h->sprite.line_length, &h->sprite.endian);
 	
 	draw_wall(h);
+	draw_sprites(h);
 
 	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);
 

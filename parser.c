@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/29 20:57:38 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/30 22:15:08 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void parse_sprite_pos(t_head *h)
 	int j;
 	int cnt;
 
-	cnt = 0;
+
 	h->sprite.num = 0;
 	j = h->start_map;
 	while (h->map[j])
@@ -170,11 +170,21 @@ void parse_sprite_pos(t_head *h)
 		}
 		j++;
 	}
-	if (!(h->sprite.x_arr = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+
+	// if (!(h->sprite.x = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+	// 	return ;
+	// if (!(h->sprite.y = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+	// 	return ;
+	// if (!(h->sprite.order = (int*)malloc(sizeof(int) * (h->sprite.num - 1))))
+	// 	return ;
+	// if (!(h->sprite.dist = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
+	// 	return ;
+
+	if (!(h->sprite.buf = (t_sprite_buf*)malloc(sizeof(t_sprite_buf) * h->sprite.num)))
 		return ;
-	if (!(h->sprite.y_arr = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
-		return ;
+
 	j = h->start_map;
+	cnt = 0;
 	while (h->map[j])
 	{
 		i = 0;
@@ -182,8 +192,8 @@ void parse_sprite_pos(t_head *h)
 		{
 			if (h->map[j][i] == '2')
 			{
-				h->sprite.x_arr[cnt] = i;
-				h->sprite.y_arr[cnt] = j;
+				h->sprite.buf[cnt].x = i;
+				h->sprite.buf[cnt].y = j;
 				cnt++;
 			}
 			i++;
