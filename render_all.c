@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/30 22:07:29 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/31 19:46:06 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,37 +157,40 @@ void draw_wall(t_head *h)
 	}
 }
 
-void quick_sort(t_head *h, double *dist, double left, double right)
+void sort_sprites(t_head *h,t_sprite_buf *buf, double left, double right)
 {
-	int pivot; // разрешающий элемент
-	int l_hold = left; //левая граница
-	int r_hold = right; // правая граница
-	pivot = dist[(int)left];
+	int				l_hold; //левая граница
+	int				r_hold; // правая граница
+	t_sprite_buf 	tmp;
+	
+	l_hold = left;
+	r_hold = right;
+	tmp = buf[(int)left]; //
 	while (left < right) // пока границы не сомкнутся
   	{
-		while ((dist[(int)right] <= pivot) && (left < right))
+		while ((buf[(int)right].dist <= tmp.dist) && (left < right))
 			right--; // сдвигаем правую границу пока элемент [right] больше [pivot]
 		if (left != right) // если границы не сомкнулись
 		{
-			dist[(int)left] = dist[(int)right]; // перемещаем элемент [right] на место разрешающего
+			buf[(int)left] = buf[(int)right]; 
 			left++; // сдвигаем левую границу вправо
 		}
-		while ((dist[(int)left] >= pivot) && (left < right))
+		while ((buf[(int)left].dist >= tmp.dist) && (left < right))
 			left++; // сдвигаем левую границу пока элемент [left] меньше [pivot]
 		if (left != right) // если границы не сомкнулись
 		{
-			dist[(int)right] = dist[(int)left]; // перемещаем элемент [left] на место [right]
+			buf[(int)right] = buf[(int)left]; 
 			right--; // сдвигаем правую границу вправо
 		}
 	}
-	dist[(int)left] = pivot; // ставим разрешающий элемент на место
-	pivot = left;
+	buf[(int)left] = tmp;
+	tmp.dist = left;
 	left = l_hold;
 	right = r_hold;
-	if (left < pivot) // Рекурсивно вызываем сортировку для левой и правой части массива
-		quick_sort(h, dist, left, pivot - 1);
-	if (right > pivot)
-		quick_sort(h, dist, pivot + 1, right);
+	if (left < tmp.dist) // Рекурсивно вызываем сортировку для левой и правой части массива
+		sort_sprites(h, buf, left, tmp.dist - 1);
+	if (right > tmp.dist)
+		sort_sprites(h, buf, tmp.dist + 1, right);
 }
 
 void draw_sprites(t_head *h)
@@ -197,38 +200,60 @@ void draw_sprites(t_head *h)
 	i = 0;
 	while(i < h->sprite.num)
 	{
-		h->sprite.buf[i].order = i;
 		h->sprite.buf[i].dist = (h->player.x - h->sprite.buf[i].x) * (h->player.x - h->sprite.buf[i].x) + (h->player.y - h->sprite.buf[i].y) * (h->player.y - h->sprite.buf[i].y);
 		i++;
 	}
 
+	//!сортировка (нулевой спрайт - самый дальний, рисуем его первым)
+	sort_sprites(h, h->sprite.buf, 0, h->sprite.num - 1);
+
 	i = 0;
-	while(i < 3)
+	while(i < h->sprite.num)
 	{
-		printf("%f\n", h->sprite.buf[i].dist);
+		//переводим положение камеры в положение относительно игрока
+		h->sprite.buf[i].x = h->sprite.buf[i].x - h->player.x;
+		h->sprite.buf[i].y = h->sprite.buf[i].y - h->player.y;
+
+		h->sprite.inv = 1.0 / (h->ray.plane_y * h->ray.raydir_x - h->ray.raydir_y * h->ray.plane_x);
+
+		h->sprite.transform_x = h->sprite.inv * (h->player.dir_y * h->sprite.buf[i].x - h->player.dir_x * h->sprite.buf[i].y);
+		h->sprite.transform_y = h->sprite.inv * (-h->ray.plane_x * h->sprite.buf[i].x + h->ray.plane_y * h->sprite.buf[i].y);
+		
+		h->sprite.screen_x = (int)(h->resol.x / 2 * (1 + h->sprite.transform_x / h->sprite.transform_y));
+	
+	//по вертикали
+		h->sprite.height = abs((int)(h->resol.y / h->sprite.transform_y)); //используем transform вместо реального расстояния от фишай эффекта
+		h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;
+		h->sprite.start_y < 0 ? h->sprite.start_y = 0 : 0;
+		h->sprite.end_y = h->sprite.height / 2 + h->resol.y / 2;
+		h->sprite.end_y >= h->resol.y ? h->sprite.end_y = h->resol.y - 1 : 0;
+
+	// по горизонтали
+		h->sprite.width = abs((int)(h->resol.y / h->sprite.transform_y)); 
+		h->sprite.start_x = -h->sprite.width / 2 + h->sprite.screen_x;
+		h->sprite.start_x < 0 ? h->sprite.start_x = 0 : 0;
+		h->sprite.end_x = h->sprite.width / 2 + h->sprite.screen_x;
+		h->sprite.end_x >= h->resol.x ? h->sprite.end_x = h->resol.x - 1 : 0;
+
+		while(h->sprite.start_x < h->sprite.end_x)
+		{
+			h->sprite.tex_x = (int)(256 * (h->sprite.start_x - (-h->sprite.width / 2 + h->sprite.screen_x)) * h->sprite.tex_w / h->sprite.width) / 256;
+			//if(h->sprite.transform_y > 0 && h->sprite.start_x > 0 && h->sprite.start_x < h->resol.x && h->sprite.transform_y < h->sprite.buf[i].dist)
+			{
+				while(h->sprite.start_y < h->sprite.end_y)
+				{
+					int d = h->sprite.start_y * 256 - h->resol.y * 128 + h->sprite.height * 128;
+					h->sprite.tex_y = ((d * h->sprite.tex_h) / h->sprite.height) / 256;
+					h->sprite.color = tex_to_pix_sprite(&h->sprite, h->sprite.tex_x, h->sprite.tex_y);
+					my_pixel_put(h, h->sprite.start_x, h->sprite.start_y, h->sprite.color);
+					h->sprite.start_y++;
+				}
+				h->sprite.start_x++;
+			}
+		}
 		i++;
 	}
 
-
-	//!сортировка (нулевой спрайт - самый дальний, рисуем его первым)
-	//quick_sort(h, h->sprite.dist, 0, h->sprite.num - 1);
-
-
-	// i = 0;
-	// while(i < 3)
-	// {
-	// 	printf("%f\n", h->sprite.buf[i].dist);
-	// 	i++;
-	// }
-
-	//i = 0;
-	// while(i < h->sprite.num)
-	// {
-	// 	//переводим положение камеры в положение относительно игрока
-	// 	h->sprite.x[i] = h->sprite.x[h->sprite.order[i]] - h->player.x;
-	// 	h->sprite.y[i] = h->sprite.y[h->sprite.order[i]] - h->player.y;
-	// 	i++;
-	// }
 }
 
 void	render_all(t_head *h)
@@ -254,7 +279,7 @@ void	render_all(t_head *h)
 	h->tex_e.addr = mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
 
 	//спрайт
-	h->sprite.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->sprite.path, &h->sprite.w, &h->sprite.h);
+	h->sprite.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->sprite.path, &h->sprite.tex_w, &h->sprite.tex_h);
 	h->sprite.addr = mlx_get_data_addr(h->sprite.img, &h->sprite.bpp, &h->sprite.line_length, &h->sprite.endian);
 	
 	draw_wall(h);

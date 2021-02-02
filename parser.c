@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/30 22:15:08 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/31 19:42:57 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,8 +192,8 @@ void parse_sprite_pos(t_head *h)
 		{
 			if (h->map[j][i] == '2')
 			{
-				h->sprite.buf[cnt].x = i;
-				h->sprite.buf[cnt].y = j;
+				h->sprite.buf[cnt].x = i + 0.5;
+				h->sprite.buf[cnt].y = j + 0.5;
 				cnt++;
 			}
 			i++;

@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/30 21:35:21 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/01/31 17:16:55 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ typedef struct	s_player
 	double	dir_x; //направление игрока, т.е. в какую сторону он будет смещаться по х и у
 	double	dir_y; 
 	double	old_dir_x; // для вращения
-//	double	rot; //rotation
 }				t_player;
 
 typedef struct	s_ray
@@ -137,7 +136,6 @@ typedef struct	s_sprite_buf
 {
 	double	x; //массив координат по x
 	double	y; //массив координат по у
-	int		order; //порядковый номер спрайтов
 	double	dist; //расстояние от игрока до спрайта
 }				t_sprite_buf;
 
@@ -150,11 +148,26 @@ typedef struct		s_sprite
 	int				endian; //порядок байтов
 	
 	char			*path;
-    int				w; //ширина текстуры 
-    int				h; //высота текстуры
+    int				tex_w; //ширина текстуры 
+    int				tex_h; //высота текстуры
 	
 	int				num;
 	t_sprite_buf	*buf;
+
+	double			inv; //inversion, без нее спрайты становятся больше/меньше при удалении/приближении
+	double			transform_x;
+	double			transform_y;
+	int				screen_x;
+	int				start_x;
+	int				end_x;
+	int				start_y;
+	int				end_y;
+
+	int				height;
+	int				width;
+	int				tex_x;
+	int				tex_y;
+	unsigned int	color;
 }					t_sprite;
 
 typedef struct	s_head
@@ -185,5 +198,6 @@ int				move(int keycode, t_head *h);
 void			my_pixel_put(t_head *h, int x, int y, int color);
 int				x_close();
 unsigned int	tex_to_pix(t_texture *tex, int x, int y);
+unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y);
 
 #endif
