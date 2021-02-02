@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 20:55:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/31 17:18:08 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/02 22:59:14 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y)
 	char			*dst;
 	unsigned int	color;
 
-	dst = tex->addr + (y * tex->line_length + (tex->tex_x - x - 1) * (tex->bpp / 8));
+	dst = tex->addr + (y * tex->line_length + (x) * (tex->bpp / 8));
 	color = *(unsigned int*)dst;
 	return(color);
 }

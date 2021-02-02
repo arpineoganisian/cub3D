@@ -89,6 +89,7 @@ int move(int keycode, t_head *h)
 		exit(0);
 	}
 	draw_wall(h);
+	draw_sprites(h);
 	mlx_put_image_to_window(h->mnlbx.mlx, h->mnlbx.mlx_win, h->data.img, 0, 0);
 	
 	return (0);

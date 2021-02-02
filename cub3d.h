@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/31 17:16:55 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 00:14:23 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,22 +99,23 @@ typedef struct	s_ray
 	double	perp; //перпендикуляр
 
 	int		side; //последний сдвиг по x или y (с какой стороны граница стены)
+	double			*perp_buf;
 
 }				t_ray;
 
 typedef struct	s_wall
 {
-	int		height;
-	int		start;
-	int		end;
-	int		ceiling;
+	int				height;
+	int				start;
+	int				end;
+	int				ceiling;
 
-	double	x; //wallX - точное значение места удара о стену
-	double	y; //texPos
-	int		tex_x; //какую именно координату по х берем из текстуры
-	int		tex_y;
-	double	scale; //насколько увеличиваем координату текстуры на пиксель экрана
-	unsigned int color;
+	double			x; //wallX - точное значение места удара о стену
+	double			y; //texPos
+	int				tex_x; //какую именно координату по х берем из текстуры
+	int				tex_y;
+	double			scale; //насколько увеличиваем координату текстуры на пиксель экрана
+	unsigned int	color;
 }				t_wall;
 
 typedef struct	s_texture
@@ -154,6 +155,8 @@ typedef struct		s_sprite
 	int				num;
 	t_sprite_buf	*buf;
 
+	double			current_x;
+	double			current_y;
 	double			inv; //inversion, без нее спрайты становятся больше/меньше при удалении/приближении
 	double			transform_x;
 	double			transform_y;
@@ -199,5 +202,6 @@ void			my_pixel_put(t_head *h, int x, int y, int color);
 int				x_close();
 unsigned int	tex_to_pix(t_texture *tex, int x, int y);
 unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y);
+void			draw_sprites(t_head *h);
 
 #endif

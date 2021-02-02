@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/01/31 19:42:57 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 00:20:44 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int parse_resolution(t_head *h, char *s)
 		i++;
 	if(s[i] >= '0' && s[i] <= '9')
 		h->resol.x = ft_atoi(s + i);
+	if (!(h->ray.perp_buf = (double*)malloc(sizeof(double) * h->resol.x)))
+		return(-1);
 	while (s[i] >= '0' && s[i] <= '9')
 		i++;
 	while (s[i] == ' ')
@@ -170,15 +172,6 @@ void parse_sprite_pos(t_head *h)
 		}
 		j++;
 	}
-
-	// if (!(h->sprite.x = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
-	// 	return ;
-	// if (!(h->sprite.y = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
-	// 	return ;
-	// if (!(h->sprite.order = (int*)malloc(sizeof(int) * (h->sprite.num - 1))))
-	// 	return ;
-	// if (!(h->sprite.dist = (double*)malloc(sizeof(double) * (h->sprite.num - 1))))
-	// 	return ;
 
 	if (!(h->sprite.buf = (t_sprite_buf*)malloc(sizeof(t_sprite_buf) * h->sprite.num)))
 		return ;
