@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 20:29:26 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 21:05:25 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,8 @@ void draw_sprites(t_head *h)
 			h->sprite.tex_x = (int)(256 * (h->sprite.start_x - (-h->sprite.width / 2 + h->sprite.screen_x)) * h->sprite.tex_w / h->sprite.width) / 256;
 			if(h->sprite.transform_y > 0 && h->sprite.start_x > 0 && h->sprite.start_x < h->resol.x && h->sprite.transform_y < h->ray.perp_buf[h->sprite.start_x])
 			{
-				h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;				
+				h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;
+				h->sprite.start_y < 0 ? h->sprite.start_y = 0 : 0;			
 				while(h->sprite.start_y < h->sprite.end_y)
 				{
 					d = h->sprite.start_y * 256 - h->resol.y * 128 + h->sprite.height * 128;
