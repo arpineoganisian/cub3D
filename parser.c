@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 00:20:44 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 16:02:07 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,19 +233,39 @@ void parse(t_head *h)
     }
 }
 
+
+
+int check_args(int argc, char **argv)
+{
+	int	i;
+
+	i = 0;
+	if (argc == 2)
+	{
+		while(argv[2])
+		{
+			//+проверка на .cub
+			i++;
+		}
+	}
+	//else if (argc == 3 && ft_strncmp("--save", argv[2], 7) == 0)
+		//screenshot();
+	//+проверка на кол-во аргументов 
+	return(0);
+}
+
 int main(int argc, char **argv)
 {
-    int			fd;
-    char		str[50];
-    int			red;
-    int			all;
-    char		*str2;
-    t_head		head;
+	int			fd;
+	char		str[50];
+	int			red;
+	int			all;
+	char		*str2;
+	t_head		head;
 
     all = 0;
+    check_args(argc, argv);
 
-    if (argc != 2)
-        return (-1);
     fd = open(argv[1], O_RDONLY);
     while ((red = read(fd, str, 50)))
         all += red;

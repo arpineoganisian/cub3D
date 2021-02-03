@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 00:15:18 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 20:29:26 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void draw_wall(t_head *h)
 	}
 }
 
-void sort_sprites(t_head *h,t_sprite_buf *buf, double left, double right)
+void sort_sprites(t_head *h, double left, double right)
 {
 	int				l_hold; //левая граница
 	int				r_hold; // правая граница
@@ -166,32 +166,33 @@ void sort_sprites(t_head *h,t_sprite_buf *buf, double left, double right)
 	
 	l_hold = left;
 	r_hold = right;
-	tmp = buf[(int)left]; //
-	while (left < right) // пока границы не сомкнутся
+	tmp = h->sprite.buf[(int)left]; //
+	if (left < right) // пока границы не сомкнутся
   	{
-		while ((buf[(int)right].dist <= tmp.dist) && (left < right))
+		while ((h->sprite.buf[(int)right].dist <= tmp.dist) && (left < right))
 			right--; // сдвигаем правую границу пока элемент [right] больше [pivot]
 		if (left != right) // если границы не сомкнулись
 		{
-			buf[(int)left] = buf[(int)right]; 
+			h->sprite.buf[(int)left] = h->sprite.buf[(int)right]; 
 			left++; // сдвигаем левую границу вправо
 		}
-		while ((buf[(int)left].dist >= tmp.dist) && (left < right))
+		while ((h->sprite.buf[(int)left].dist >= tmp.dist) && (left < right))
 			left++; // сдвигаем левую границу пока элемент [left] меньше [pivot]
 		if (left != right) // если границы не сомкнулись
 		{
-			buf[(int)right] = buf[(int)left]; 
+			h->sprite.buf[(int)right] = h->sprite.buf[(int)left]; 
 			right--; // сдвигаем правую границу вправо
 		}
 	}
-	buf[(int)left] = tmp;
+	h->sprite.buf[(int)left] = tmp;
+	
 	tmp.dist = left;
 	left = l_hold;
 	right = r_hold;
 	if (left < tmp.dist) // Рекурсивно вызываем сортировку для левой и правой части массива
-		sort_sprites(h, buf, left, tmp.dist - 1);
+		sort_sprites(h, left, tmp.dist - 1);
 	if (right > tmp.dist)
-		sort_sprites(h, buf, tmp.dist + 1, right);
+		sort_sprites(h, tmp.dist + 1, right);
 }
 
 void draw_sprites(t_head *h)
@@ -207,7 +208,7 @@ void draw_sprites(t_head *h)
 	}
 
 	//!сортировка (нулевой спрайт - самый дальний, рисуем его первым)
-	sort_sprites(h, h->sprite.buf, 0, h->sprite.num - 1);
+	sort_sprites(h, 0, h->sprite.num - 1);
 
 	i = 0;
 	while(i < h->sprite.num)
@@ -223,7 +224,7 @@ void draw_sprites(t_head *h)
 		
 		h->sprite.screen_x = (int)(h->resol.x / 2 * (1 + h->sprite.transform_x / h->sprite.transform_y));
 	
-	//по вертикали
+	//по вертикалиadada
 		h->sprite.height = abs((int)(h->resol.y / h->sprite.transform_y)); //используем transform вместо реального расстояния от фишай эффекта
 		h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;
 		h->sprite.start_y < 0 ? h->sprite.start_y = 0 : 0;
