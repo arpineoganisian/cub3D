@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   screenshot.c                                       :+:      :+:    :+:   */
+/*   error_mssg.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/03 21:49:14 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 22:22:53 by hwoodwri         ###   ########.fr       */
+/*   Created: 2021/02/03 21:41:31 by hwoodwri          #+#    #+#             */
+/*   Updated: 2021/02/03 22:32:47 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void screenshot(t_head *h)
+int error_mssg(int err)
 {
-	(void)h;
+	err == 1 ? write(1, "Invalid map file\n", 12) : 0;
+	err == 2 ? write(1, "Wrong number of arguments\n", 26) : 0;
+	err == 3 ? write(1, "Write ''--save'' if you want to take a screenshot\n", 50) : 0;
+	err == 4 ? write(1, "Please set valid display resolution\n", 36) : 0;
+	
+	exit(0);
 }

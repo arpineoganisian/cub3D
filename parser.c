@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 16:02:07 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 22:36:00 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,27 @@ int parse_resolution(t_head *h, char *s)
 		i++;
 	if(s[i] >= '0' && s[i] <= '9')
 		h->resol.x = ft_atoi(s + i);
-	if (!(h->ray.perp_buf = (double*)malloc(sizeof(double) * h->resol.x)))
-		return(-1);
+	if (!(h->ray.perp_buf = (double*)malloc(sizeof(double) * h->resol.x))) //ПЕРЕНЕСТИ В ДРУГОЕ МЕСТО
+		return(-1); //И ЭТО ТОЖЕ
 	while (s[i] >= '0' && s[i] <= '9')
 		i++;
-	while (s[i] == ' ')
-		i++;
+	if (s[i] == ' ')
+		while (s[i] == ' ')
+			i++;
+	else
+		return(error_mssg(4));
 	if (s[i] >= '0' && s[i] <= '9')
 		h->resol.y = ft_atoi(s + i);
 	while (s[i] >= '0' && s[i] <= '9')
+		i++;	
+	while (s[i] == ' ')
 		i++;
 	if(s[i] == '\0')
 		return (0);
-	return (-1);
+	return (error_mssg(4));
 }
+
+
 
 void parse_player(t_head *h)
 {
@@ -235,22 +242,27 @@ void parse(t_head *h)
 
 
 
-int check_args(int argc, char **argv)
+int check_arguments(int argc, char **argv, t_head *h)
 {
 	int	i;
 
 	i = 0;
-	if (argc == 2)
+	if (argc == 2 || argc == 3)
 	{
-		while(argv[2])
-		{
-			//+проверка на .cub
+		while(ft_isprint(argv[1][i]))
 			i++;
-		}
+		if(ft_strncmp(".cub", argv[1] + (i - 4), 4))
+			return(error_mssg(1));
 	}
-	//else if (argc == 3 && ft_strncmp("--save", argv[2], 7) == 0)
-		//screenshot();
-	//+проверка на кол-во аргументов 
+	if (argc == 3)
+	{
+		if (ft_strncmp("--save", argv[2], 7) == 0)
+			screenshot(h);
+		else
+			return(error_mssg(3));
+	}
+	if (argc != 2 && argc != 3)
+		return(error_mssg(2));
 	return(0);
 }
 
@@ -264,9 +276,9 @@ int main(int argc, char **argv)
 	t_head		head;
 
     all = 0;
-    check_args(argc, argv);
-
-    fd = open(argv[1], O_RDONLY);
+    check_arguments(argc, argv, &head);
+    if((fd = open(argv[1], O_RDONLY)) == -1)
+		return(error_mssg(1));
     while ((red = read(fd, str, 50)))
         all += red;
     close(fd);

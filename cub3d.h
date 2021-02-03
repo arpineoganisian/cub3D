@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 18:22:44 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/03 21:49:32 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,8 @@ int				x_close();
 unsigned int	tex_to_pix(t_texture *tex, int x, int y);
 unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y);
 void			draw_sprites(t_head *h);
+int error_mssg(int err);
+void screenshot(t_head *h);
 //void	sort_sprites(t_head *all, int first, int last);
 
 #endif

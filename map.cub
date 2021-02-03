@@ -1,4 +1,4 @@
-R    1200 1000
+R    1200 1000 
 NO ./textures/bluestone.xpm
 SO  ./textures/colorstone.xpm
 WE   ./textures/greystone.xpm
