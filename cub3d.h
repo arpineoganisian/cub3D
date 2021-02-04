@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 21:49:32 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/04 22:59:28 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,12 @@ typedef struct		s_sprite
 	unsigned int	color;
 }					t_sprite;
 
+typedef struct	s_save
+{
+	int	flag;
+	int	fd;
+}				t_save;
+
 typedef struct	s_head
 {
 	char			**map;
@@ -191,6 +197,7 @@ typedef struct	s_head
 	t_texture		tex_e;
 	t_texture		current_tex; //текущая текстура (чтобы работало с разными размерами текстур)
 	t_sprite		sprite;
+	t_save			save;
 }				t_head;
 
 int				main(int argc, char **argv);
@@ -203,8 +210,8 @@ int				x_close();
 unsigned int	tex_to_pix(t_texture *tex, int x, int y);
 unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y);
 void			draw_sprites(t_head *h);
-int error_mssg(int err);
-void screenshot(t_head *h);
-//void	sort_sprites(t_head *all, int first, int last);
+int				error_mssg(int err);
+void			screenshot(t_head *h);
+
 
 #endif

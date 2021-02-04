@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 22:36:00 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/05 00:04:19 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int parse_resolution(t_head *h, char *s)
 		while (s[i] == ' ')
 			i++;
 	else
-		return(error_mssg(4));
+		error_mssg(4);
 	if (s[i] >= '0' && s[i] <= '9')
 		h->resol.y = ft_atoi(s + i);
 	while (s[i] >= '0' && s[i] <= '9')
@@ -208,7 +208,7 @@ void parse(t_head *h)
 	int j;
 
 	j = 0;
-	while(h->map[j])
+	while(j < 8)
 	{
 		if (h->map[j][0] == 'R' && h->map[j][1] == ' ')
 			if (parse_resolution(h, h->map[j]))
@@ -229,14 +229,14 @@ void parse(t_head *h)
         if (h->map[j][0] == 'C' && h->map[j][1] == ' ')
 			if (parse_colors(h, h->map[j], h->map[j][0]))
 				return ;
-		if (h->map[j][0] == ' ' || h->map[j][0] == '0' || h->map[j][0] == '1')
-        {
-			h->start_map = j;
-			parse_sprite_pos(h);
-			parse_player(h);
-            render_all(h);
-        }
         j++;
+    }
+	if (h->map[j][0] == ' ' || h->map[j][0] == '0' || h->map[j][0] == '1')
+    {
+		h->start_map = j;
+		parse_sprite_pos(h);
+		parse_player(h);
+    	render_all(h);
     }
 }
 
@@ -247,22 +247,23 @@ int check_arguments(int argc, char **argv, t_head *h)
 	int	i;
 
 	i = 0;
+	h->save.flag = 0;
 	if (argc == 2 || argc == 3)
 	{
 		while(ft_isprint(argv[1][i]))
 			i++;
 		if(ft_strncmp(".cub", argv[1] + (i - 4), 4))
-			return(error_mssg(1));
+			error_mssg(1);
 	}
 	if (argc == 3)
 	{
 		if (ft_strncmp("--save", argv[2], 7) == 0)
-			screenshot(h);
+			h->save.flag = 1;
 		else
-			return(error_mssg(3));
+			error_mssg(3);
 	}
 	if (argc != 2 && argc != 3)
-		return(error_mssg(2));
+		error_mssg(2);
 	return(0);
 }
 
@@ -278,7 +279,7 @@ int main(int argc, char **argv)
     all = 0;
     check_arguments(argc, argv, &head);
     if((fd = open(argv[1], O_RDONLY)) == -1)
-		return(error_mssg(1));
+		error_mssg(1);
     while ((red = read(fd, str, 50)))
         all += red;
     close(fd);

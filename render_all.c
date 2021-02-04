@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/03 21:05:25 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/04 23:48:47 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,6 +269,9 @@ void	render_all(t_head *h)
 	int	max_y;
 
 	h->mnlbx.mlx = mlx_init();
+	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);
+	
+	//if (!h->save.flag)
 	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.x, h->resol.y, "cub3D");
 	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
 	h->data.addr = mlx_get_data_addr(h->data.img, &h->data.bpp, &h->data.line_length, &h->data.endian);
@@ -292,12 +295,14 @@ void	render_all(t_head *h)
 	draw_wall(h);
 	draw_sprites(h);
 
-	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);
-
 	mlx_put_image_to_window(h->mnlbx.mlx, h->mnlbx.mlx_win, h->data.img, 0, 0);
-
-	mlx_hook(h->mnlbx.mlx_win, 2, 1L<<0, move, h);
-	mlx_hook(h->mnlbx.mlx_win, 17, 0, x_close, 0);
-
-	mlx_loop(h->mnlbx.mlx);
+	
+	if (!h->save.flag)
+	{
+		mlx_hook(h->mnlbx.mlx_win, 2, 1L<<0, move, h);
+		mlx_hook(h->mnlbx.mlx_win, 17, 0, x_close, 0);
+		mlx_loop(h->mnlbx.mlx);
+	}
+	else
+		screenshot(h);
 }
