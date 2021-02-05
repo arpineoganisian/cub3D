@@ -5,9 +5,9 @@ WE   ./textures/greystone.xpm
 EA    ./textures/wood.xpm
 
 
-S ./textures/barrel.xpm
-F 243,170,215
-C 243,252,215
+S ./textures/pillar.xpm
+F 255,255,255
+C 255,255,255
 
            1111111111111111111111111
            1000000000110000000000001

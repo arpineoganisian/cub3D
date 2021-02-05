@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/04 22:59:28 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/05 20:41:46 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef struct	s_ray
 	double	perp; //перпендикуляр
 
 	int		side; //последний сдвиг по x или y (с какой стороны граница стены)
-	double			*perp_buf;
+	double	*perp_buf;
 
 }				t_ray;
 
@@ -201,7 +201,19 @@ typedef struct	s_head
 }				t_head;
 
 int				main(int argc, char **argv);
-void			parse_player(t_head *head);
+int				check_arguments(int argc, char **argv, t_head *h);
+void			parser(t_head *h);
+void				parse_resolution(t_head *h, char *s);
+void			parse_sprite_pos(t_head *h);
+void			parse_sprite_tex(t_head *h, char *s);
+int				parse_textures(t_head *h, char *s, char side);
+void				parse_colors(t_head *h, char *s, char c);
+void			parse_player(t_head *h);
+int				create_rgb(int r, int g, int b);
+void			allocate_mem(t_head *h);
+
+
+
 void			render_all(t_head *h);
 void			draw_wall(t_head *h);
 int				move(int keycode, t_head *h);

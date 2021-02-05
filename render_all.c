@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/04 23:48:47 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/05 20:35:37 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,13 +265,6 @@ void draw_sprites(t_head *h)
 
 void	render_all(t_head *h)
 {
-	int	max_x;
-	int	max_y;
-
-	h->mnlbx.mlx = mlx_init();
-	mlx_get_screen_size(h->mnlbx.mlx, &max_x, &max_y);
-	
-	//if (!h->save.flag)
 	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.x, h->resol.y, "cub3D");
 	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
 	h->data.addr = mlx_get_data_addr(h->data.img, &h->data.bpp, &h->data.line_length, &h->data.endian);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hwoodwri <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/02 19:47:02 by hwoodwri          #+#    #+#              #
-#    Updated: 2021/01/02 19:47:14 by hwoodwri         ###   ########.fr        #
+#    Updated: 2021/02/05 00:14:48 by hwoodwri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -I.
+CFLAGS = -Wall -Werror -Wextra -I. -lmlx -framework OpenGL -framework AppKit
 
 RM = rm -f
 
@@ -36,7 +36,7 @@ $(NAME): $(OBJ)
 	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
 	
-%.o: %.c libftprintf.h
+%.o: %.c cub3D
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
