@@ -6,20 +6,11 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 17:15:00 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/05 20:28:15 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/06 21:41:29 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void map_valid(t_head *h, int j)
-{
-	h->start_map = j;
-	parse_sprite_pos(h);
-	parse_player(h);
-	allocate_mem(h);
-    render_all(h);
-}
 
 void parser(t_head *h)
 {
@@ -46,8 +37,8 @@ void parser(t_head *h)
 			parse_colors(h, h->map[j], h->map[j][0]);
         j++;
     }
-	if (h->map[j][0] == ' ' || h->map[j][0] == '0' || h->map[j][0] == '1')
-		map_valid(h, j);
+	h->start_map = j;
+	map_valid(h);
 }
 
 

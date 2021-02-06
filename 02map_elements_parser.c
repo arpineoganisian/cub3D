@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 19:15:42 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/05 20:42:43 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/06 21:46:57 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void parse_sprite_pos(t_head *h)
 		}
 		j++;
 	}
-
+	
 	if (!(h->sprite.buf = (t_sprite_buf*)malloc(sizeof(t_sprite_buf) * h->sprite.num)))
 		return ;
 
@@ -161,11 +161,13 @@ void parse_sprite_pos(t_head *h)
 
 }
 
-
 void parse_player(t_head *h)
 {
-	int j;
-	int i;
+	int		j;
+	int		i;
+
+	h->player.x = 0;
+	h->player.y = 0;
 
 	j = h->start_map;
 	while (h->map[j])
@@ -175,6 +177,8 @@ void parse_player(t_head *h)
 		{
 			if (h->map[j][i] == 'N' || h->map[j][i] == 'S' || h->map[j][i] == 'W' || h->map[j][i] == 'E')
 			{
+				if (h->player.x && h->player.y)
+					error_mssg(1);
 				h->player.x = i + 0.5;
 				h->player.y = j + 0.5;
 				if (h->map[j][i] == 'N')
@@ -207,7 +211,11 @@ void parse_player(t_head *h)
 				}
 			}
 			i++;
+			
 		}
 		j++;
 	}
+	h->end_map = j - 1;
+	if (!h->player.x && !h->player.y)
+		error_mssg(1);
 }

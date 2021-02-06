@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/05 20:41:46 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/06 21:33:38 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ typedef struct	s_head
 {
 	char			**map;
 	int				start_map;
+	int				end_map;
 	t_mnlbx			mnlbx;
 	t_resolution	resol;
 //	t_map			map;
@@ -203,12 +204,13 @@ typedef struct	s_head
 int				main(int argc, char **argv);
 int				check_arguments(int argc, char **argv, t_head *h);
 void			parser(t_head *h);
-void				parse_resolution(t_head *h, char *s);
+void			parse_resolution(t_head *h, char *s);
 void			parse_sprite_pos(t_head *h);
 void			parse_sprite_tex(t_head *h, char *s);
 int				parse_textures(t_head *h, char *s, char side);
-void				parse_colors(t_head *h, char *s, char c);
+void			parse_colors(t_head *h, char *s, char c);
 void			parse_player(t_head *h);
+void			map_valid(t_head *h);
 int				create_rgb(int r, int g, int b);
 void			allocate_mem(t_head *h);
 
