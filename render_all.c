@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 01:09:46 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/05 20:35:37 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/07 17:39:27 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void draw_wall(t_head *h)
 
 	
 	x = 0;
-	while (x < h->resol.x)
+	while (x < h->resol.w)
 	{
-		h->ray.cam_y = 2 * x / (double)h->resol.x - 1; //в какой половине экрана (левая, середина, правая)
+		h->ray.cam_y = 2 * x / (double)h->resol.w - 1; //в какой половине экрана (левая, середина, правая)
 		
 		h->ray.raydir_x = h->player.dir_x + h->ray.plane_x * h->ray.cam_y; //могут быть -1, 0, 1
 		h->ray.raydir_y = h->player.dir_y + h->ray.plane_y * h->ray.cam_y;
@@ -92,13 +92,13 @@ void draw_wall(t_head *h)
 			h->ray.perp = (h->ray.map_y - h->player.y + (1 - h->ray.step_y) / 2) / h->ray.raydir_y;
 		
 		//задаем длину стенки
-		h->wall.height = (int)(h->resol.y / h->ray.perp);
+		h->wall.height = (int)(h->resol.h / h->ray.perp);
 
 		//задем верхний и нижний пиксель
-		h->wall.start = -h->wall.height / 2 + h->resol.y / 2;
+		h->wall.start = -h->wall.height / 2 + h->resol.h / 2;
 		h->wall.start < 0 ? (h->wall.start = 0) : 0;
-		h->wall.end = h->wall.height / 2 + h->resol.y / 2;
-		h->wall.end >= h->resol.y || h->wall.end < 0 ? (h->wall.end = h->resol.y - 1) : 0;
+		h->wall.end = h->wall.height / 2 + h->resol.h / 2;
+		h->wall.end >= h->resol.h || h->wall.end < 0 ? (h->wall.end = h->resol.h - 1) : 0;
 		
 		h->wall.ceiling = 0;
 
@@ -123,15 +123,15 @@ void draw_wall(t_head *h)
 			h->current_tex = h->tex_s;
 
 		//нужная х-координата текстуры
-		h->wall.tex_x = (int)(h->wall.x * h->current_tex.x);
+		h->wall.tex_x = (int)(h->wall.x * h->current_tex.w);
 		if((h->ray.side == 0 && h->ray.raydir_x > 0) || (h->ray.side == 1 && h->ray.raydir_y < 0))
-			h->wall.tex_x = h->current_tex.x - h->wall.tex_x - 1;
+			h->wall.tex_x = h->current_tex.w - h->wall.tex_x - 1;
 
 		//насколько увеличиваем координату текстуры на пиксель экрана
-		h->wall.scale = 1.0 * h->current_tex.y / h->wall.height;
+		h->wall.scale = 1.0 * h->current_tex.h / h->wall.height;
 
 		//начальная координата текстуры
-		h->wall.y = (h->wall.start - h->resol.y / 2 + h->wall.height / 2) * h->wall.scale;
+		h->wall.y = (h->wall.start - h->resol.h / 2 + h->wall.height / 2) * h->wall.scale;
 
 		while(h->wall.ceiling <= h->wall.start)
 		{
@@ -140,7 +140,8 @@ void draw_wall(t_head *h)
 		}
 		while(h->wall.start <= h->wall.end)
 		{
-			h->wall.tex_y = (int)h->wall.y & (h->current_tex.x - 1);
+			h->wall.tex_y = (int)h->wall.y & (h->current_tex.w - 1);
+
 			h->wall.y += h->wall.scale;
 
 			h->wall.color = tex_to_pix(&h->current_tex, h->wall.tex_x, h->wall.tex_y);
@@ -148,7 +149,7 @@ void draw_wall(t_head *h)
 			my_pixel_put(h, x, h->wall.start, h->wall.color);
 			h->wall.start++;	
 		}
-		while(h->wall.end < h->resol.y)
+		while(h->wall.end < h->resol.h)
 		{
 			my_pixel_put(h, x, h->wall.end, h->color.floor_color);
 			h->wall.end++;
@@ -222,33 +223,33 @@ void draw_sprites(t_head *h)
 		h->sprite.transform_x = h->sprite.inv * (h->player.dir_y * h->sprite.current_x - h->player.dir_x * h->sprite.current_y);
 		h->sprite.transform_y = h->sprite.inv * (-h->ray.plane_y * h->sprite.current_x + h->ray.plane_x * h->sprite.current_y);
 		
-		h->sprite.screen_x = (int)(h->resol.x / 2 * (1 + h->sprite.transform_x / h->sprite.transform_y));
+		h->sprite.screen_x = (int)(h->resol.w / 2 * (1 + h->sprite.transform_x / h->sprite.transform_y));
 	
 	//по вертикалиadada
-		h->sprite.height = abs((int)(h->resol.y / h->sprite.transform_y)); //используем transform вместо реального расстояния от фишай эффекта
-		h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;
+		h->sprite.height = abs((int)(h->resol.h / h->sprite.transform_y)); //используем transform вместо реального расстояния от фишай эффекта
+		h->sprite.start_y = -h->sprite.height / 2 + h->resol.h / 2;
 		h->sprite.start_y < 0 ? h->sprite.start_y = 0 : 0;
-		h->sprite.end_y = h->sprite.height / 2 + h->resol.y / 2;
-		h->sprite.end_y >= h->resol.y ? h->sprite.end_y = h->resol.y - 1 : 0;
+		h->sprite.end_y = h->sprite.height / 2 + h->resol.h / 2;
+		h->sprite.end_y >= h->resol.h ? h->sprite.end_y = h->resol.h - 1 : 0;
 
 	// по горизонтали
-		h->sprite.width = abs((int)(h->resol.y / h->sprite.transform_y)); 
+		h->sprite.width = abs((int)(h->resol.h / h->sprite.transform_y)); 
 		h->sprite.start_x = -h->sprite.width / 2 + h->sprite.screen_x;
 		h->sprite.start_x < 0 ? h->sprite.start_x = 0 : 0;
 		h->sprite.end_x = h->sprite.width / 2 + h->sprite.screen_x;
-		h->sprite.end_x >= h->resol.x ? h->sprite.end_x = h->resol.x - 1 : 0;
+		h->sprite.end_x >= h->resol.w ? h->sprite.end_x = h->resol.w - 1 : 0;
 
 		
 		while(h->sprite.start_x < h->sprite.end_x)
 		{
 			h->sprite.tex_x = (int)(256 * (h->sprite.start_x - (-h->sprite.width / 2 + h->sprite.screen_x)) * h->sprite.tex_w / h->sprite.width) / 256;
-			if(h->sprite.transform_y > 0 && h->sprite.start_x > 0 && h->sprite.start_x < h->resol.x && h->sprite.transform_y < h->ray.perp_buf[h->sprite.start_x])
+			if(h->sprite.transform_y > 0 && h->sprite.start_x > 0 && h->sprite.start_x < h->resol.w && h->sprite.transform_y < h->ray.perp_buf[h->sprite.start_x])
 			{
-				h->sprite.start_y = -h->sprite.height / 2 + h->resol.y / 2;
+				h->sprite.start_y = -h->sprite.height / 2 + h->resol.h / 2;
 				h->sprite.start_y < 0 ? h->sprite.start_y = 0 : 0;			
 				while(h->sprite.start_y < h->sprite.end_y)
 				{
-					d = h->sprite.start_y * 256 - h->resol.y * 128 + h->sprite.height * 128;
+					d = h->sprite.start_y * 256 - h->resol.h * 128 + h->sprite.height * 128;
 					h->sprite.tex_y = ((d * h->sprite.tex_h) / h->sprite.height) / 256;
 					h->sprite.color = tex_to_pix_sprite(&h->sprite, h->sprite.tex_x, h->sprite.tex_y);
 					if((h->sprite.color & 0x00FFFFFF) != 0)
@@ -265,20 +266,31 @@ void draw_sprites(t_head *h)
 
 void	render_all(t_head *h)
 {
-	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.x, h->resol.y, "cub3D");
-	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.x, h->resol.y);
+	int	max_w;
+	int	max_h;
+
+	h->mnlbx.mlx = mlx_init();
+	mlx_get_screen_size(h->mnlbx.mlx, &max_w, &max_h);
+	
+	if (h->resol.w > max_w)
+		h->resol.w = max_w;
+	if (h->resol.h > max_h)
+		h->resol.h = max_h;
+	
+	h->mnlbx.mlx_win = mlx_new_window(h->mnlbx.mlx, h->resol.w, h->resol.h, "cub3D");
+	h->data.img = mlx_new_image(h->mnlbx.mlx, h->resol.w, h->resol.h);
 	h->data.addr = mlx_get_data_addr(h->data.img, &h->data.bpp, &h->data.line_length, &h->data.endian);
 
-	h->tex_n.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_n.path, &h->tex_n.x, &h->tex_n.y);
+	h->tex_n.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_n.path, &h->tex_n.w, &h->tex_n.h);
 	h->tex_n.addr = mlx_get_data_addr(h->tex_n.img, &h->tex_n.bpp, &h->tex_n.line_length, &h->tex_n.endian);
 
-	h->tex_s.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_s.path, &h->tex_s.x, &h->tex_s.y);
+	h->tex_s.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_s.path, &h->tex_s.w, &h->tex_s.h);
 	h->tex_s.addr = mlx_get_data_addr(h->tex_s.img, &h->tex_s.bpp, &h->tex_s.line_length, &h->tex_s.endian);
 
-	h->tex_w.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_w.path, &h->tex_w.x, &h->tex_w.y);
+	h->tex_w.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_w.path, &h->tex_w.w, &h->tex_w.h);
 	h->tex_w.addr = mlx_get_data_addr(h->tex_w.img, &h->tex_w.bpp, &h->tex_w.line_length, &h->tex_w.endian);
 
-	h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_e.path, &h->tex_e.x, &h->tex_e.y);
+	h->tex_e.img = mlx_xpm_file_to_image(h->mnlbx.mlx, h->tex_e.path, &h->tex_e.w, &h->tex_e.h);
 	h->tex_e.addr = mlx_get_data_addr(h->tex_e.img, &h->tex_e.bpp, &h->tex_e.line_length, &h->tex_e.endian);
 
 	//спрайт

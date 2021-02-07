@@ -18,10 +18,10 @@ void ft_clean_window(t_head *h)
 	int	j;
 
 	i = 0;
-	while(i < h->resol.y)
+	while(i < h->resol.h)
 	{
 		j = 0;
-		while (j < h->resol.x)
+		while (j < h->resol.w)
 		{
 			my_pixel_put(h, j, i, 0x000000);
 			j++;
@@ -49,8 +49,8 @@ int move(int keycode, t_head *h)
 		if (h->map[(int)(h->player.y - h->player.dir_y * MOVE)][(int)h->player.x] != '1') 
 			// && h->map[(int)(h->player.y - h->player.dir_y * MOVE)][(int)h->player.x] != '2')
 			h->player.y -= h->player.dir_y * MOVE;
-		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * MOVE)] != '1' && 
-			h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * MOVE)] != '2') 
+		if (h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * MOVE)] != '1') 
+			//&& h->map[(int)h->player.y][(int)(h->player.x - h->player.dir_x * MOVE)] != '2') 
 			h->player.x -= h->player.dir_x * MOVE;
 	}
 	if (keycode == A)

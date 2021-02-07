@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 21:49:14 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/04 23:50:06 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/07 00:20:31 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void screenshot(t_head *h)
 	if ((h->save.fd = open("screenshot.bmp", O_CREAT | O_WRONLY | O_TRUNC, 0655)) == -1) // 0655 - права, чтобы пересоздавать файл
 		error_mssg(5);
 	
-	bf_size = 14 + 40 + (4 * h->resol.x * h->resol.y);
+	bf_size = 14 + 40 + (4 * h->resol.w * h->resol.h);
 	
 	ft_bzero(bmp_file_header, 14);
 	ft_bzero(bmp_info_header, 40);
@@ -37,19 +37,19 @@ void screenshot(t_head *h)
 	bmp_file_header[10] = (unsigned int)54;
 	
 	bmp_info_header[0] = (unsigned int)40;
-	bmp_info_header[4] = (unsigned int)(h->resol.x);
-	bmp_info_header[5] = (unsigned int)(h->resol.x >> 8);
-	bmp_info_header[6] = (unsigned int)(h->resol.x >> 16);
-	bmp_info_header[7] = (unsigned int)(h->resol.x >> 24);
-	bmp_info_header[8] = (unsigned int)(h->resol.y);
-	bmp_info_header[9] = (unsigned int)(h->resol.y >> 8);
-	bmp_info_header[10] = (unsigned int)(h->resol.y >> 16);
-	bmp_info_header[11] = (unsigned int)(h->resol.y >> 24);
+	bmp_info_header[4] = (unsigned int)(h->resol.w);
+	bmp_info_header[5] = (unsigned int)(h->resol.w >> 8);
+	bmp_info_header[6] = (unsigned int)(h->resol.w >> 16);
+	bmp_info_header[7] = (unsigned int)(h->resol.w >> 24);
+	bmp_info_header[8] = (unsigned int)(h->resol.h);
+	bmp_info_header[9] = (unsigned int)(h->resol.h >> 8);
+	bmp_info_header[10] = (unsigned int)(h->resol.h >> 16);
+	bmp_info_header[11] = (unsigned int)(h->resol.h >> 24);
 	bmp_info_header[12] = (unsigned int)1;
 	bmp_info_header[14] = (unsigned int)32;
 	
-	height = h->resol.y;
-	line_length = h->resol.x * h->data.bpp / 8;
+	height = h->resol.h;
+	line_length = h->resol.w * h->data.bpp / 8;
 	write(h->save.fd, bmp_file_header, 14);
 	write(h->save.fd, bmp_info_header, 40);
 	while(height >= 0)

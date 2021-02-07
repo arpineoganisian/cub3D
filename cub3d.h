@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/06 21:33:38 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/07 00:19:35 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@
 #define A 0
 #define D 2
 #define S 1
-#define ROTATION 0.05
-#define MOVE 0.1
 #define LEFT 123
 #define RIGHT 124
+#define ROTATION 0.05
+#define MOVE 0.1
 
 typedef struct 	s_mnlbx
 {
@@ -48,8 +48,8 @@ typedef struct	s_data
 
 typedef struct	s_resolution
 {
-	int	x;
-	int	y;
+	int	w;
+	int	h;
 }				t_resolution;
 
 typedef struct	s_color
@@ -124,8 +124,8 @@ typedef struct	s_texture
 	char	*addr;
     
 	char    *path;
-    int     x;
-    int     y;
+    int     w;
+    int     h;
 
 	int		bpp;
 	int		line_length;
