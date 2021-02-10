@@ -6,7 +6,7 @@
 /*   By: hwoodwri <hwoodwri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 19:55:04 by hwoodwri          #+#    #+#             */
-/*   Updated: 2021/02/07 17:53:03 by hwoodwri         ###   ########.fr       */
+/*   Updated: 2021/02/10 21:41:53 by hwoodwri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <unistd.h> // read, close
 # include <stdlib.h> // malloc
 
-# include <stdio.h> // УДАЛИТЬ
+# include <stdio.h> //perror
 
 #define ESC 53
 #define W 13
@@ -28,8 +28,8 @@
 #define S 1
 #define LEFT 123
 #define RIGHT 124
-#define ROTATION 0.05
-#define MOVE 0.1
+#define ROTATION 0.1
+#define MOVE 0.2
 
 typedef struct 	s_mnlbx
 {
@@ -57,13 +57,6 @@ typedef struct	s_color
 	int	ceiling_color;
 	int	floor_color;
 }				t_color;
-
-////структура для 2д карты
-// typedef struct	s_map
-// {
-// 	int	x;
-// 	int	y;
-// }				t_map;
 
 typedef struct	s_player
 {
@@ -122,11 +115,9 @@ typedef struct	s_texture
 {	
 	int		*img; //сама картинка с текстурой
 	char	*addr;
-    
 	char    *path;
     int     w;
     int     h;
-
 	int		bpp;
 	int		line_length;
 	int		endian; //порядок байтов
@@ -154,7 +145,6 @@ typedef struct		s_sprite
 	
 	int				num;
 	t_sprite_buf	*buf;
-
 	double			current_x;
 	double			current_y;
 	double			inv; //inversion, без нее спрайты становятся больше/меньше при удалении/приближении
@@ -181,12 +171,21 @@ typedef struct	s_save
 
 typedef struct	s_head
 {
+	int				no; /* flag for north texture */
+	int				so; /* flag for south texture */
+	int				we; /* flag for west texture */
+	int				ea; /* flag for east texture */
+	int				f; /* flag for floor */
+	int				c; /* flag for ceiling */
+	int				r;
+	int				s; 
+	
+	char			*tmp_str;
 	char			**map;
 	int				start_map;
 	int				end_map;
 	t_mnlbx			mnlbx;
 	t_resolution	resol;
-//	t_map			map;
 	t_player		player;
 	t_data			data;
 	t_color			color;
@@ -201,17 +200,33 @@ typedef struct	s_head
 	t_save			save;
 }				t_head;
 
+///////01
 int				main(int argc, char **argv);
-int				check_arguments(int argc, char **argv, t_head *h);
-void			parser(t_head *h);
-void			parse_resolution(t_head *h, char *s);
-void			parse_sprite_pos(t_head *h);
-void			parse_sprite_tex(t_head *h, char *s);
-int				parse_textures(t_head *h, char *s, char side);
-void			parse_colors(t_head *h, char *s, char c);
+//int			check_arguments(int argc, char **argv, t_head *h)
+//int			count_symbols(int fd, char *str)
+//void			check_map_for_nl(char *str2)
+//void			parser(t_head *h)
+
+void			init_zero(t_head *h);
+
+///////02
 void			parse_player(t_head *h);
+void			parse_resolution(t_head *h, char *s);
+void			parse_textures(t_head *h, char *s, char side);
+void			parse_sprite_tex(t_head *h, char *s);
+void			parse_sprite_pos(t_head *h);
+void			parse_colors(t_head *h, char *s, char c);
+//int			create_rgb(int r, int g, int b);
+
+///////03
 void			map_valid(t_head *h);
-int				create_rgb(int r, int g, int b);
+//int			max_strlen(char **map)
+//char			**make_square(t_head *h, int j)
+//void			check_spaces(char **map, int j, int i)
+//void			free_map(char **map)
+
+
+
 void			allocate_mem(t_head *h);
 
 
@@ -224,7 +239,8 @@ int				x_close();
 unsigned int	tex_to_pix(t_texture *tex, int x, int y);
 unsigned int	tex_to_pix_sprite(t_sprite *tex, int x, int y);
 void			draw_sprites(t_head *h);
-int				error_mssg(int err);
+
+int				error_mssg(int err, t_head *h);
 void			screenshot(t_head *h);
 
 
